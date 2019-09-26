@@ -21,6 +21,8 @@ class Tree:
 
         self.addAllChildren()
     
+    # TODO: Needs to be optimized
+    # ! Aaron to do this
     def addAllChildren(self):
         
         if self.check():
@@ -72,6 +74,8 @@ class Tree:
 
         return not (((self.state[0][0] < self.state[0][1]) and self.state[0][0] != 0) or ((self.state[1][0] < self.state[1][1]) and self.state[1][0] != 0) or self.isInTree())
 
+    # TODO: Needs to be optimized
+    # ! Austin to do this
     def isInTree(self):
         
         node = self
@@ -116,7 +120,7 @@ def print_solution(end):
         n = s.pop()
 
         p = "({:3} {:3} | {:3} {:3})[{:1}]".format(n.state[0][0] * 'M', n.state[0][1] * 'C', 
-                                                n.state[1][0] * 'M', n.state[1][1] * 'C', n.state[2])
+                                                   n.state[1][0] * 'M', n.state[1][1] * 'C', n.state[2])
         print(p)
 
     print("=" * 20)
@@ -124,7 +128,9 @@ def print_solution(end):
 
 
 def main():
-
+            # Left side, Right side
+            #[[M, C], [M, C], 'Side boat is on']
+            # Cost of each action is 1
     root = Tree([[3, 3], [0, 0], 'L'])
 
     print(root)
