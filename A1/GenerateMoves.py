@@ -19,9 +19,9 @@ class Tree:
             solutions.append(self)
             return
 
-        self.addAllChilren()
+        self.addAllChildren()
     
-    def addAllChilren(self):
+    def addAllChildren(self):
         
         if self.check():
             options = ''
@@ -114,12 +114,9 @@ def print_solution(end):
     print("=" * 20)
     while len(s) != 0:
         n = s.pop()
-        # p = "(" + (n.state[0][0] * 'M') + ' ' + (n.state[0][1] * 'C') + ' | ' 
-        # + (n.state[1][0] * 'M') + ' ' + (n.state[1][1] * 'C') + ")[" + n.state[2] + "]"
 
-        p = "({:3} {:3}{:1}|{:1}{:3} {:3})".format(n.state[0][0] * 'M', n.state[0][1] * 'C',
-                                                        'B' if n.state[2] == 'L' else "", 'B' if n.state[2] == 'R' else "", 
-                                                         n.state[1][0] * 'M', n.state[1][1] * 'C')
+        p = "({:3} {:3} | {:3} {:3})[{:1}]".format(n.state[0][0] * 'M', n.state[0][1] * 'C', 
+                                                n.state[1][0] * 'M', n.state[1][1] * 'C', n.state[2])
         print(p)
 
     print("=" * 20)
@@ -129,10 +126,6 @@ def print_solution(end):
 def main():
 
     root = Tree([[3, 3], [0, 0], 'L'])
-    # root.addAllChilren()
-
-    # for child in root.children:
-    #     child.addAllChilren()
 
     print(root)
     
