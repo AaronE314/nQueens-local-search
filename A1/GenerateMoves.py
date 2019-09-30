@@ -4,9 +4,8 @@ from copy import deepcopy
 from queue import Queue
 
 solutions = []
-
+hashTable = {}
 class Tree:
-
     def __init__(self, state, parent = None, action = None, pathCost = 0):
         self.children = []
         self.state = state
@@ -14,7 +13,6 @@ class Tree:
         self.action = action
         self.pathCost = pathCost
         self.SOLUTION = [[0, 0], [3, 3], 'R']
-
         if state == self.SOLUTION:
             solutions.append(self)
             return
@@ -78,23 +76,22 @@ class Tree:
     # ! Austin to do this
     def isInTree(self):
         
-        node = self
+        key = "{}{}{}{}".format(self.state[0][0],self.state[0][1],self.state[1][0],self.state[1][1] )
+        table = hashTable
+        value = table.get(key)
+        print("--------------")
+        print("new Key = ",key)
+        print(table)
 
-        while node.parent != None:
-            node = node.parent
-        
-        q = Queue()
-        q.put(node)
-
-        while not q.empty():
-            v = q.get()
-            if v.state == self.state and v is not self:
-                return True
+        if value == None: #value doesnt exist in the table
+            print("False")
+            table[key] = True
+            print("--------------")
+            return False
+        print("True")
+        print("--------------")
+        return True
             
-            for c in v.children:
-                q.put(c)
-
-        return False
 
 
     def __str__(self, level=0):
