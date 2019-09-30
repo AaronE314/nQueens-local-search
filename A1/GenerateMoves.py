@@ -17,9 +17,9 @@ class Tree:
         if state == self.SOLUTION:
             solutions.append(self)
             return
-
-        self.addAllChildren()
     
+    def getChildren(self):
+        return self.children
     # TODO: Needs to be optimized
     # ! Aaron to do this
     def addAllChildren(self):
@@ -50,6 +50,8 @@ class Tree:
                 if self.action is None or not (m == self.action[0] and c == self.action[1]):
                     self.children.append(Tree(self.move((m, c)), self, (m, c), self.pathCost + 1))
 
+
+
     def move(self, moves):
 
         newState = deepcopy(self.state)
@@ -78,19 +80,22 @@ class Tree:
     def isInTree(self):
         
         key = "{}{}{}{}{}".format(self.state[0][0],self.state[0][1],self.state[1][0],self.state[1][1],self.state[2])
-        table = hashTable
-        value = table.get(key)
-        print("--------------")
-        print("new Key = ",key)
-        print(table)
-
+       
+        value = hashTable.get(key)
         if value == None: #value doesnt exist in the table
-            print("False")
-            table[key] = True
-            print("--------------")
+            '''print("------------")
+            print(key)
+            print(hashTable)
+            print("return false")
+            '''
+            hashTable[key] = True
             return False
-        print("True")
-        print("--------------")
+        '''
+        print("------------")
+        print(key)
+        print(hashTable)
+        print("return True")
+        '''
         return True
 
 
@@ -129,6 +134,17 @@ def main():
             #[[M, C], [M, C], 'Side boat is on']
             # Cost of each action is 1
     root = Tree([[3, 3], [0, 0], 'L'])
+    head = Queue()
+    head.put(root)
+    while (head.empty() is not True ): 
+        node = head.get()
+        node.addAllChildren()
+        #print("-------------")
+        
+        for child in node.getChildren():
+            #print(child.state)
+            head.put(child)
+        #print("-------------")
 
     print(root)
     
