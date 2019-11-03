@@ -29,15 +29,15 @@ def addNeighbhors(queue,node, puzzle):
             queue.add(puzzle[i][j])
 
     #grab neighbhors in box
-    row = (currentRow / 3) * 3
-    col = (currentCollumn / 3) * 3
+    row = (currentRow // 3) * 3
+    col = (currentCollumn // 3) * 3
 
     for i in range(3) :
         for j in range(3) :
             if (currentRow != row +i and currentCollumn != col+ j):
                 queue.add(puzzle[row +i][col+ j])
    
-def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
+def loadPuzzle(file='./puzzles/easy.csv', num=1, header=True):
 
     with open(file, 'r') as f:
         
@@ -73,5 +73,5 @@ def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
         return puzzle, solution
 
 if __name__ == "__main__":
-    # print(load_puzzle())
+    # print(loadPuzzle())
     pass
