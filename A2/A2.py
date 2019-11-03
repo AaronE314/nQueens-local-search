@@ -34,8 +34,8 @@ def addNeighbhors(queue,node, puzzle):
 
     for i in range(3) :
         for j in range(3) :
-            if (currentRow != i and currentCollumn != j):
-                queue.add(puzzle[i][j])
+            if (currentRow != row +i and currentCollumn != col+ j):
+                queue.add(puzzle[row +i][col+ j])
    
 def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
 
