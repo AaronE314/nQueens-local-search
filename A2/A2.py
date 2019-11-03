@@ -1,3 +1,10 @@
+class Node:
+    def __init__(self,i,j,value=none, domain=[1,2,3,4,5,6,7,8,9]):
+        self.i = i
+        self.j = i
+        self.value = value
+        self.domain = domain
+
 
 
 def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
