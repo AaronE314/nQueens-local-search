@@ -1,11 +1,15 @@
 class Node:
-    def __init__(self,i,j,value=None, domain=[1,2,3,4,5,6,7,8,9]):
-        self.i = i
-        self.j = j
+    def __init__(self,row,col,value=None, domain=range(1, 10)):
+        self.row = row
+        self.col = col
         self.value = value
-        self.domain = domain
+        self.domain = list(domain)
 
+    def __str__(self):
+        return '({}, {}, {}, {})'.format(self.row, self.col, self.value, self.domain)
 
+    def __repr__(self):
+        return '({}, {}, {}, {})'.format(self.row, self.col, self.value, self.domain)
 
 def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
 
@@ -26,13 +30,13 @@ def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
 
             puzzle = []
             for j in range(9):
-                val = j+(j*8)
-                puzzle.append(puzzleAndSol[0][val:val+9])
+                for k in range(9):
+                    puzzle.append(Node(j, k, None if puzzleAndSol[0][j*(9) + k] == '.' else puzzleAndSol[0][j*(9) + k]))
 
             solution = []
             for j in range(9):
-                val = j+(j*8)
-                solution.append(puzzleAndSol[1][val:val+9])
+                for k in range(9):
+                    solution.append(Node(j, k, None if puzzleAndSol[1][j*(9) + k] == '.' else puzzleAndSol[1][j*(9) + k]))
 
             if num > 1:
                 puzzles.append(puzzle)
@@ -41,3 +45,7 @@ def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
         return puzzles, solutions
     else:
         return puzzle, solution
+
+if __name__ == "__main__":
+    # print(load_puzzle())
+    pass
