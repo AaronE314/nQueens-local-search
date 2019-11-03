@@ -1,7 +1,7 @@
 class Node:
     def __init__(self,i,j,value=None, domain=[1,2,3,4,5,6,7,8,9]):
         self.i = i
-        self.j = i
+        self.j = j
         self.value = value
         self.domain = domain
 
