@@ -5,6 +5,33 @@ class Node:
         self.value = value
         self.domain = domain
 
+def addNeighbhors(queue,node, puzzle):
+    currentRow = node.i
+    currentCollumn = node.j 
+    #grab neighbhors in nodes row
+    i = currentRow
+    for j in range(9): 
+        if (currentRow != i and currentCollumn != j):
+            queue.add(puzzle[i][j])
+
+    #grab neighbhors in nodes column
+    j = currentCollumn
+    for i in range(9): 
+        if (currentRow != i and currentCollumn != j):
+            queue.add(puzzle[i][j])
+
+    #grab neighbhors in box
+    row = (currentRow / 3) * 3
+    col = (currentCollumn / 3) * 3
+
+    for i in range(3) :
+        for j in range(3) :
+            if (currentRow != i and currentCollumn != j):
+                queue.add(puzzle[i][j])
+            
+     
+
+
 
 
 def load_puzzle(file='./puzzles/easy.csv', num=1, header=True):
