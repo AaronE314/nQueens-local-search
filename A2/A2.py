@@ -88,6 +88,7 @@ def AC3(puzzle):
                     if (Xj.value != None and Xj.value in node.domain):
                         node.domain.remove((Xj.value))
 
+            #Grab domain count after domain pruning
 
             newDomainCount = len(node.domain)
             if newDomainCount == 1 :
