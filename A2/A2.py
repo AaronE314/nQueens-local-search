@@ -109,7 +109,7 @@ def AC3(puzzle):
                 noneValueFound = True
             j+=1
         i +=1 
-    return puzzle, not noneValueFound
+    return puzzle, not noneValueFound, noSolution
 
 
 
