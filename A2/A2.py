@@ -36,8 +36,6 @@ class Arc:
         if(self.Xi.value is not None and self.Xi.value == self.Xj.value):
             notSolvable = True 
         elif (self.Xj.value != None and self.Xj.value in self.Xi.domain):
-            if (self.Xi.row ==8 and self.Xi.col == 1):
-                print()
             self.Xi.domain.remove((self.Xj.value))
             if (len(self.Xi.domain)< 0 ): 
                 notSolvable = True
