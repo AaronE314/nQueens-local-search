@@ -7,9 +7,11 @@ class Node:
         self.col = col
         if value is not None: 
             self.value = int(value)
+            self.domain = list(domain)
         else : 
             self.value = value
         self.domain = list(domain)
+        
 
     def __str__(self):
         return '({}, {}, {}, {})'.format(self.row, self.col, self.value, self.domain)
@@ -17,7 +19,32 @@ class Node:
     def __repr__(self):
         return '({}, {}, {}, {})'.format(self.row, self.col, self.value, self.domain)
 
+class Arc: 
+    def __init__(self,Xi,Xj):
+        self.Xi = Xi
+        self.Xj = Xj 
 
+    def evaluate(self):
+        '''
+        Evaluates arc
+        ---------------------------
+        returns:
+            noSolution: whether or not the state of the puzzle is not solvable
+            Checks : Xi != Xj and Xi domain not {}
+        '''
+        notSolvable = False 
+        #enforcing arc consistency Xi != Xj 
+        if(self.Xi.value is not None and self.Xi.value == self.Xj.value):
+            notSolvable = True 
+        elif (self.Xj.value != None and self.Xj.value in self.Xi.domain):
+            self.Xi.domain.remove((self.Xj.value))
+            if (len(self.Xi.domain)< 0 ): 
+                notSolvable = True
+        return notSolvable
+                
+            
+
+        
 def addNeighbours(queue,node, puzzle):
     currentRow = node.row
     currentColumn = node.col
@@ -25,13 +52,13 @@ def addNeighbours(queue,node, puzzle):
     i = currentRow
     for j in range(9): 
         if not (currentRow == i and currentColumn == j):
-            queue.put(puzzle[i][j])
+            queue.put(Arc(puzzle[i][j], node ))
 
     #grab neighbhors in nodes column
     j = currentColumn
     for i in range(9): 
         if not (currentRow == i and currentColumn == j):
-            queue.put(puzzle[i][j])
+            queue.put(Arc(puzzle[i][j], node ))
 
     #grab neighbhors in box
     row = (currentRow // 3) * 3
@@ -40,7 +67,7 @@ def addNeighbours(queue,node, puzzle):
     for i in range(3) :
         for j in range(3) :
             if not (currentRow == row +i and currentColumn == col+ j):
-                queue.put(puzzle[row +i][col+ j])
+                queue.put(Arc(puzzle[row + i][col + j], node ))
 
 def AC3(puzzle): 
     queue = Queue()
@@ -48,55 +75,41 @@ def AC3(puzzle):
     #fill queue with initial constraints
     for row in puzzle:
         for node in row: 
-            queue.put(node)
-
-    noSolution = False
-    while (queue.qsize() >  0  and not noSolution): 
-        #Get first Node
-        node = queue.get_nowait()
-        if node.value is None: 
-            #get needed attributes
-
             currentRow = node.row
             currentColumn = node.col
-            domainCount = len(node.domain)
             #grab neighbhors in nodes row
             i = currentRow
             for j in range(9): 
-                #checking Arc (Xi,Xj) where Xi != Xj. if Xj has value , remove it from Xi's domain
-                Xj = puzzle[i][j]
-                if (Xj.value != None and Xj.value in node.domain):
-                    node.domain.remove((Xj.value))
-                
-                    
+                if not (currentRow == i and currentColumn == j):
+                    queue.put(Arc(node,puzzle[i][j] ))
 
             #grab neighbhors in nodes column
             j = currentColumn
             for i in range(9): 
-                #checking Arc (Xi,Xj) where Xi != Xj. if Xj has value , remove it from Xi's domain
-                Xj = puzzle[i][j]
-                if (Xj.value != None and Xj.value in node.domain):
-                    node.domain.remove((Xj.value))
-                
+                if not (currentRow == i and currentColumn == j):
+                    queue.put(Arc( node,puzzle[i][j] ))
+
             #grab neighbhors in box
-            row = (currentRow // 3) * 3
+            num_row = (currentRow // 3) * 3
             col = (currentColumn // 3) * 3
 
             for i in range(3) :
                 for j in range(3) :
-                #checking Arc (Xi,Xj) where Xi != Xj. if Xj has value , remove it from Xi's domain
-                    Xj = puzzle[row + i][col + j]
-                    if (Xj.value != None and Xj.value in node.domain):
-                        node.domain.remove((Xj.value))
-
-            #Grab domain count after domain pruning
-
+                    if not (currentRow == num_row +i and currentColumn == col+ j):
+                        queue.put(Arc(node,puzzle[num_row+ i][col+j] ))
+                        
+    noSolution = False
+    while (queue.qsize() >  0  and not noSolution): 
+        #Get first Node
+        arc = queue.get_nowait()
+        node = arc.Xi
+        if node.value is None: 
+            #get needed attributes
+            domainCount = len(node.domain)
+            noSolution= arc.evaluate()
             newDomainCount = len(node.domain)
             if newDomainCount == 1 :
                 node.value = node.domain[0]
-            elif newDomainCount == 0 : 
-                noSolution = True
-            
             if newDomainCount < domainCount:
                 addNeighbours(queue,node,puzzle)
 
@@ -398,6 +411,7 @@ if __name__ == "__main__":
     # while not q.empty():
     #     print(q.get_nowait())
     print_board(p)
+
     print()
     print("=========Solved===========")
     print()
