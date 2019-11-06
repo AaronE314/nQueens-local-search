@@ -7,9 +7,10 @@ class Node:
         self.col = col
         if value is not None: 
             self.value = int(value)
+            self.domain = [int(value)]
         else : 
             self.value = value
-        self.domain = list(domain)
+            self.domain = list(domain)
         
 
     def __str__(self):
@@ -254,12 +255,13 @@ def backtrack(puzzle, row, col):
 
                     # Call the next node
                     puzzle, completed = backtrack(puzzle, nextNode.row, nextNode.col)
-                    
+
                     # We returned from the backtracking
                     # if completed then we are done
                     # collapse the call stack
                     if completed:
                         return puzzle, completed
+
                 else:
                     return puzzle, completed
         # we returned from the backtracking
@@ -382,7 +384,6 @@ def getNextNode(puzzle):
         for node in row:
             if node.value is None and (nextNode is None or len(nextNode.domain) > len(node.domain)):
                 nextNode = node
-
     return nextNode
 
 def print_board(puzzle, detailed=False):
