@@ -488,7 +488,7 @@ if __name__ == "__main__":
 
     num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 
-    puzzles, _ = loadPuzzle(file='./puzzles/multipleSolutions.txt',num=num, header=False)
+    puzzles, _ = loadPuzzle(file='./puzzles/random.txt',num=num, header=True)
 
     if num == 1:
         puzzles = [puzzles]
