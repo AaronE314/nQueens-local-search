@@ -102,7 +102,7 @@ def AC3(puzzle):
                         queue.put(Arc(node,puzzle[num_row+ i][col+j] ))
                         
     noSolution = False
-    qlengths+=queue.qsize()
+    qlengths.append(queue.qsize())
     while (queue.qsize() >  0  and not noSolution): 
         #Get first Node
         arc = queue.get_nowait()
@@ -116,7 +116,7 @@ def AC3(puzzle):
             node.value = node.domain[0]
         if newDomainCount < domainCount:
             addNeighbours(queue,node,puzzle)
-        qlengths+=queue.qsize()
+        qlengths.append(queue.qsize())
 
     i=0 
     j= 0 
