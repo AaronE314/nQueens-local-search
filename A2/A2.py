@@ -1,5 +1,8 @@
 from queue import Queue
-from copy import deepcopy
+from copy import 
+#for the graph at the end
+import matplotlib.pyplot as plt
+qlengths=[]
 
 class Node:
     def __init__(self,row,col,value=None, domain=range(1, 10)):
@@ -99,6 +102,7 @@ def AC3(puzzle):
                         queue.put(Arc(node,puzzle[num_row+ i][col+j] ))
                         
     noSolution = False
+    qlengths+=queue.qsize()
     while (queue.qsize() >  0  and not noSolution): 
         #Get first Node
         arc = queue.get_nowait()
@@ -112,6 +116,7 @@ def AC3(puzzle):
             node.value = node.domain[0]
         if newDomainCount < domainCount:
             addNeighbours(queue,node,puzzle)
+        qlengths+=queue.qsize()
 
     i=0 
     j= 0 
@@ -432,5 +437,12 @@ if __name__ == "__main__":
         print_board(finishedPuzzle)
 
     print('Actual Solution')
+    #ploting the queu lengths
+    plt.plot(qlengths)
+    plt.ylabel('Length of the Queue')
+    plt.xlabel('Step count')
+    plt.show()
+    plt.savefig('Sudoku-Queue-length-plot-.png')
+    #
     print_board(s)
     
