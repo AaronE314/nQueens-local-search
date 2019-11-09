@@ -73,6 +73,7 @@ def addNeighbours(queue,node, puzzle):
                 queue.put(Arc(puzzle[row + i][col + j], node ))
 
 def AC3(puzzle): 
+    global qlengths
     queue = Queue()
     
     #fill queue with initial constraints
@@ -409,6 +410,7 @@ def print_board(puzzle, detailed=False):
             print('- ' * 13)
 
 if __name__ == "__main__":
+    global qlengths
     q = Queue()
     p, s = loadPuzzle()
     # addNeighbours(q, p[0][0], p)
