@@ -1,3 +1,21 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+ 
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Austin Bursey , Aaron Exley\\ Tim McGill, Joseph Myc}
+\lhead{CP468 A2\\November 11th 2019}
+\rfoot{Page \thepage}
+\begin{document}
+\section{Binary Constraints}
+
+\section{Implementation of AC3 (with backtracking) for sudoku }
+\begin{verbatim}
+
 from queue import Queue
 from copy import deepcopy
 import sys
@@ -555,3 +573,5 @@ if __name__ == "__main__":
         plt.savefig('queue_lengths/Sudoku-Queue-length-plot-{}.png'.format(i))
         # plt.show()
         plt.close()
+\end{verbatim}
+\end{document}
