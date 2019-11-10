@@ -1,0 +1,51 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{complete}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Checks if the puzzle is solved}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params:}
+\PYG{l+s+sd}{        puzzle: A 2d array of Node objects}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        True if every node has a value, false otherwise}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+        \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{]}\PYG{o}{.}\PYG{n}{value} \PYG{o}{==} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n+nb+bp}{False}
+
+    \PYG{k}{return} \PYG{n+nb+bp}{True}
+
+\PYG{k}{def} \PYG{n+nf}{getNextNode}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    returns the next node to check using MRV}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params:}
+\PYG{l+s+sd}{        puzzle: A 2d array of Node objects}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        The next node to search}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{nextNode} \PYG{o}{=} \PYG{n+nb+bp}{None}
+    \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{puzzle}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{node} \PYG{o+ow}{in} \PYG{n}{row}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{node}\PYG{o}{.}\PYG{n}{value} \PYG{o+ow}{is} \PYG{n+nb+bp}{None} \PYG{o+ow}{and} \PYG{p}{(}\PYG{n}{nextNode} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}
+            \PYG{o+ow}{or} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{nextNode}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)):}
+                \PYG{n}{nextNode} \PYG{o}{=} \PYG{n}{node}
+    \PYG{k}{return} \PYG{n}{nextNode}
+
+\PYG{k}{def} \PYG{n+nf}{print\PYGZus{}board}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{detailed}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{):}
+
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{13}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{puzzle}\PYG{p}{:}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{row}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{detailed}\PYG{p}{:}
+                \PYG{n}{domain} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n}{col}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}[\PYGZob{}\PYGZcb{} (\PYGZob{}:9s\PYGZcb{})]\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{n}{domain}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{col} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{print}\PYG{p}{()}
+        \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{row} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{13}\PYG{p}{)}
+\end{Verbatim}

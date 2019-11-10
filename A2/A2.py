@@ -50,7 +50,7 @@ class Arc:
 
         
 def addNeighbours(queue,node, puzzle):
-     '''
+    '''
     Adds all Arcs where Xk != Xi given Xi. 
     ---------------------------
     Params (optional):
@@ -440,7 +440,7 @@ def print_board(puzzle, detailed=False):
         for col in row:
             if detailed:
                 domain = ''.join(str(x) for x in col.domain)
-                print("[{} ({:9s})]".format(col.value if col.value else '.', domain), end=' ')
+                print("[{} ({:6s})]".format(col.value if col.value else '.', domain if domain != "123456789" else "1..9"), end=' ')
             else:
                 print(col.value if col.value else '.', end=' ')
             if col.col % 3 == 2:
@@ -513,7 +513,7 @@ if __name__ == "__main__":
 
     num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 
-    puzzles, _ = loadPuzzle(file='./puzzles/random.txt',num=num, header=True)
+    puzzles, _ = loadPuzzle(file='./puzzles/random.csv',num=num, start=49, header=True)
 
     if num == 1:
         puzzles = [puzzles]
@@ -530,16 +530,24 @@ if __name__ == "__main__":
 
         if completed:
             print("Sudoku solved using AC3")
-            print_board_and_sol(original_puzzle, finishedPuzzle)
+            # print_board_and_sol(original_puzzle, finishedPuzzle)
+            print_board(original_puzzle, detailed=True)
+            print_board(finishedPuzzle, detailed=True)
         elif noSolution:
             print('No Solution!')
-            print_board(original_puzzle)
+            print_board(original_puzzle, detailed=True)
         else:
 
             print('Board used Backtracking')
             ac3_puzzle = deepcopy(finishedPuzzle)
             finishedPuzzle2, finished = backtrackSearch(finishedPuzzle)
-            print_board_and_sol_and_ac3(original_puzzle, ac3_puzzle, finishedPuzzle2)
+            # print_board_and_sol_and_ac3(original_puzzle, ac3_puzzle, finishedPuzzle2)
+            print("Original Puzzle")
+            print_board(original_puzzle, detailed=True)
+            print("After AC3")
+            print_board(ac3_puzzle, detailed=True)
+            print("Solution")
+            print_board(finishedPuzzle2, detailed=True)
             if not finished:
                 print("Backtracking Failed to find a solution")
                 print_board(finishedPuzzle2)
