@@ -47,7 +47,7 @@
 \section{Binary Constraints}
 The binary version of the constraints for the csp is that every cell in the puzzle, has the constraint where its value can not be equal to any of its neighbours  values. This results in 8 constraints for the row neighbours, 8 constraints for the column neighbours, and 8 constraints for the box neighbours. This results in 24 constraints for each node in the puzzle, so across the 81 node there are a total of 1944 constraints.\\
 \newline
-A more mathematical way to represent the constraints is as follows\\
+A more mathematical way to represent the constraints is as follows:\\
 For the Rows:
 \begin{align*}
 cell[x, y].value \ne cell[i, y].value,\quad i=0\rightarrow8\,and\, i \ne x
