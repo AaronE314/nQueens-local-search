@@ -6,6 +6,7 @@
 \usepackage{minted}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
+\usepackage{amsmath}
 \usepackage[margin=1in]{geometry}
 
 \addtolength{\topmargin}{.2in}
@@ -37,7 +38,6 @@
  
        \vfill
 
- 
        \vspace{0.8cm}
  
    \end{center}
@@ -45,16 +45,31 @@
 \setcounter{page}{2}
 
 \section{Binary Constraints}
-
+The binary version of the constraints for the csp is that every cell in the puzzle, has the constraint where its value can not be equal to any of its neighbours  values. This results in 9 constraints for the row neighbours, 9 constraints for the column neighbours, and 9 constraints for the box neighbours. This results in 27 constraints for each node in the puzzle, so across the 81 node there are a total of 2187 constraints.\\
+\newline
+A more mathematical way to represent the constraints is as follows
+For the Rows:
+\begin{align*}
+cell[x, y].value \ne cell[i, y].value,\quad i=0\rightarrow8 and i \ne x
+\end{align*}
+For the Columns:
+\begin{align*}
+cell[x, y].value \ne cell[x, j].value,\quad j=0\rightarrow8 and j \ne y
+\end{align*}
+For the Box's:
+\begin{align*}
+cell[x, y].value \ne cell[i, j].value,\quad i=[x-(x\%3)]\rightarrow[x+(2-(x\%3))]\,and\, i \ne x \\
+												j=[y-(y\%3)]\rightarrow[y+(2-(y\%3))]\, and\, j \ne y
+\end{align*}
 \section{AC3 Queue Size}
 
 The length of the queue was recorded after every iteration of the AC3 algorithm, and then plotted on a graph.
 \newline
-In the case where the sudoku was solved with AC3 alone we get a graph that looks as follows
+In the case where the Sudoku was solved with AC3 alone we get a graph that looks as follows
 
 \includegraphics[scale=0.6]{Sudoku-Queue-length-plot-29.png}
 
-In the case where the sudoku was not solved with AC3, backtracking is used. In the backtracking algorithm AC3 is called after every assignment to make sure the csp is still arc consistent with that assignment. We still kept track of the length for every call, every time the graph reaches 0 is when an AC3 call finishes.
+In the case where the Sudoku was not solved with AC3, backtracking is used. In the backtracking algorithm AC3 is called after every assignment to make sure the csp is still arc consistent with that assignment. We still kept track of the length for every call, every time the graph reaches 0 is when an AC3 call finishes.
 
 \includegraphics[scale=0.6]{Sudoku-Queue-length-plot-10.png}
 
@@ -108,7 +123,9 @@ class Arc:
             if (len(self.Xi.domain)< 0 ): 
                 notSolvable = True
         return notSolvable
-                
+\end{minted}
+\newpage
+\begin{minted}{python}
 def addNeighbours(queue,node, puzzle):
      '''
     Adds all Arcs where Xk != Xi given Xi. 
@@ -632,7 +649,6 @@ if __name__ == "__main__":
         plt.ylabel('Length of the Queue')
         plt.xlabel('Step count')
         plt.savefig('queue_lengths/Sudoku-Queue-length-plot-{}.png'.format(i))
-        # plt.show()
         plt.close()
 \end{minted}
 
