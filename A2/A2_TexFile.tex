@@ -47,7 +47,7 @@
 \section{Binary Constraints}
 The binary version of the constraints for the csp is that every cell in the puzzle, has the constraint where its value can not be equal to any of its neighbours  values. This results in 8 constraints for the row neighbours, 8 constraints for the column neighbours, and 8 constraints for the box neighbours. This results in 24 constraints for each node in the puzzle, so across the 81 node there are a total of 1944 constraints.\\
 \newline
-A more mathematical way to represent the constraints is as follows:\\
+A more mathematical way to represent the constraints for each cell  in the Sudoku is as follows:\\
 For the Rows:
 \begin{align*}
 cell[x, y].value \ne cell[i, y].value,\quad i=0\rightarrow8\,and\, i \ne x
@@ -153,10 +153,10 @@ class Arc:
 \newpage
 \begin{minted}{python}
 def addNeighbours(queue,node, puzzle):
-     '''
+    '''
     Adds all Arcs where Xk != Xi given Xi. 
     ---------------------------
-    Params (optional):
+    Params:
         queue: a Queue of of arcs to evaluate using AC3
         node: the node Xi you would like to add all neighbhor arcs to
         puzzle: a 2d array of Nodes representing the puzzle
@@ -193,7 +193,7 @@ def AC3(puzzle):
     '''
     Does AC3 algorithm on Sudoku Puzzle
     ---------------------------
-    Params (optional):
+    Params:
         puzzle: a 2d array of Nodes representing the puzzle
     returns:
         puzzle: a 2d array of Nodes representing the puzzle
@@ -635,7 +635,7 @@ if __name__ == "__main__":
 
     num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 
-    puzzles, _ = loadPuzzle(file='./puzzles/random.txt',num=num, header=True)
+    puzzles, _ = loadPuzzle(file='./puzzles/random.csv',num=num, header=True)
 
     if num == 1:
         puzzles = [puzzles]
