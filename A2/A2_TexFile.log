@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6800 64-bit) (preloaded format=pdflatex 2018.9.18)  10 NOV 2019 20:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6800 64-bit) (preloaded format=pdflatex 2018.9.18)  10 NOV 2019 20:11
 entering extended mode
 **./A2_TexFile.tex
 (A2_TexFile.tex
@@ -1273,7 +1273,7 @@ runsystem(del A2_TexFile.pyg)...executed.
 Here is how much of TeX's memory you used:
  17137 strings out of 492973
  348354 string characters out of 3126692
- 460295 words of memory out of 3000000
+ 460291 words of memory out of 3000000
  20647 multiletter control sequences out of 15000+200000
  6107 words of font info for 24 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
