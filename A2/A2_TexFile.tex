@@ -73,6 +73,32 @@ In the case where the Sudoku was not solved with AC3, backtracking is used. In t
 
 \includegraphics[scale=0.6]{Sudoku-Queue-length-plot-10.png}
 
+\section{Input format}
+
+For the input we decided to go with a string read from a file that is 81 characters long with a . as the placeholder for empty cells.\\
+\newline
+Here is an example of one of the inputs:
+\newline
+\begin{verbatim}
+.........27.....14....8.573...745186.....2......8....7.485.......647..2..1....6..
+\end{verbatim}
+Is equal to the puzzle:
+\begin{verbatim}
+-------------------------
+| . . . | . . . | . . . |
+| 2 7 . | . . . | . 1 4 |
+| . . . | . 8 . | 5 7 3 |
+-------------------------
+| . . . | 7 4 5 | 1 8 6 |
+| . . . | . . 2 | . . . |
+| . . . | 8 . . | . . 7 |
+-------------------------
+| . 4 8 | 5 . . | . . . |
+| . . 6 | 4 7 . | . 2 . |
+| . 1 . | . . . | 6 . . |
+-------------------------
+\end{verbatim}
+
 \newpage
 \section{Implementation of AC3 (with backtracking) for Sudoku }
 \begin{minted}{python}
