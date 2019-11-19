@@ -1,0 +1,108 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{print\PYGZus{}board\PYGZus{}and\PYGZus{}sol}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{solution}\PYG{p}{):}
+
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZob{}:\PYGZca{}25s\PYGZcb{}\PYGZob{}:20s\PYGZcb{}\PYGZob{}:\PYGZca{}25s\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Original Puzzle\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Solved After AC3\PYGZdq{}}\PYG{p}{))}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{rowp}\PYG{p}{,} \PYG{n}{rows} \PYG{o+ow}{in} \PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{solution}\PYG{p}{):}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{rowp}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{col} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{19}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}| \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{rows}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{col} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{print}\PYG{p}{()}
+        \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{row} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{print\PYGZus{}board\PYGZus{}and\PYGZus{}sol\PYGZus{}and\PYGZus{}ac3}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{ac3}\PYG{p}{,} \PYG{n}{solution}\PYG{p}{):}
+
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZob{}:\PYGZca{}25s\PYGZcb{}\PYGZob{}:20s\PYGZcb{}\PYGZob{}:\PYGZca{}25s\PYGZcb{}\PYGZob{}:20s\PYGZcb{}\PYGZob{}:\PYGZca{}25s\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Original Puzzle\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}After AC3\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Solution\PYGZdq{}}\PYG{p}{))}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{rowp}\PYG{p}{,} \PYG{n}{rowac}\PYG{p}{,} \PYG{n}{rows} \PYG{o+ow}{in} \PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{ac3}\PYG{p}{,} \PYG{n}{solution}\PYG{p}{):}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{rowp}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{col} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{19}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}| \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{rowac}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{col} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{19}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}| \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{rows}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{value} \PYG{k}{else} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{col} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}|\PYGZsq{}}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}}\PYG{p}{)}
+        \PYG{k}{print}\PYG{p}{()}
+        \PYG{k}{if} \PYG{n}{col}\PYG{o}{.}\PYG{n}{row} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{3} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{} \PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{20}\PYG{p}{,} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZsq{}} \PYG{o}{*} \PYG{l+m+mi}{25}\PYG{p}{)}
+
+\PYG{n}{qlengths} \PYG{o}{=} \PYG{p}{[]}
+\PYG{k}{if} \PYG{n+nv+vm}{\PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{}} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}\PYGZdq{}}\PYG{p}{:}
+    \PYG{n}{q} \PYG{o}{=} \PYG{n}{Queue}\PYG{p}{()}
+
+    \PYG{n}{num} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{sys}\PYG{o}{.}\PYG{n}{argv}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])} \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{sys}\PYG{o}{.}\PYG{n}{argv}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1} \PYG{k}{else} \PYG{l+m+mi}{1}
+
+    \PYG{n}{puzzles}\PYG{p}{,} \PYG{n}{\PYGZus{}} \PYG{o}{=} \PYG{n}{loadPuzzle}\PYG{p}{(}\PYG{n+nb}{file}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}./puzzles/random.txt\PYGZsq{}}\PYG{p}{,}\PYG{n}{num}\PYG{o}{=}\PYG{n}{num}\PYG{p}{,} \PYG{n}{header}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+
+    \PYG{k}{if} \PYG{n}{num} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{:}
+        \PYG{n}{puzzles} \PYG{o}{=} \PYG{p}{[}\PYG{n}{puzzles}\PYG{p}{]}
+
+    \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{p} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{puzzles}\PYG{p}{,} \PYG{n}{start}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{):}
+        \PYG{n}{qlengths} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{n}{original\PYGZus{}puzzle} \PYG{o}{=} \PYG{n}{deepcopy}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)}
+
+        \PYG{n}{finishedPuzzle}\PYG{p}{,} \PYG{n}{completed}\PYG{p}{,} \PYG{n}{noSolution} \PYG{o}{=} \PYG{n}{AC3}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)}
+
+        \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{puzzles}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZob{}\PYGZcb{}:\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{))}
+
+        \PYG{k}{if} \PYG{n}{completed}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Sudoku solved using AC3\PYGZdq{}}\PYG{p}{)}
+            \PYG{n}{print\PYGZus{}board\PYGZus{}and\PYGZus{}sol}\PYG{p}{(}\PYG{n}{original\PYGZus{}puzzle}\PYG{p}{,} \PYG{n}{finishedPuzzle}\PYG{p}{)}
+        \PYG{k}{elif} \PYG{n}{noSolution}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}No Solution!\PYGZsq{}}\PYG{p}{)}
+            \PYG{n}{print\PYGZus{}board}\PYG{p}{(}\PYG{n}{original\PYGZus{}puzzle}\PYG{p}{)}
+        \PYG{k}{else}\PYG{p}{:}
+
+            \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Board used Backtracking\PYGZsq{}}\PYG{p}{)}
+            \PYG{n}{ac3\PYGZus{}puzzle} \PYG{o}{=} \PYG{n}{deepcopy}\PYG{p}{(}\PYG{n}{finishedPuzzle}\PYG{p}{)}
+            \PYG{n}{finishedPuzzle2}\PYG{p}{,} \PYG{n}{finished} \PYG{o}{=} \PYG{n}{backtrackSearch}\PYG{p}{(}\PYG{n}{finishedPuzzle}\PYG{p}{)}
+            \PYG{n}{print\PYGZus{}board\PYGZus{}and\PYGZus{}sol\PYGZus{}and\PYGZus{}ac3}\PYG{p}{(}\PYG{n}{original\PYGZus{}puzzle}\PYG{p}{,} \PYG{n}{ac3\PYGZus{}puzzle}\PYG{p}{,} \PYG{n}{finishedPuzzle2}\PYG{p}{)}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{finished}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Backtracking Failed to find a solution\PYGZdq{}}\PYG{p}{)}
+                \PYG{n}{print\PYGZus{}board}\PYG{p}{(}\PYG{n}{finishedPuzzle2}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{}ploting the queue lengths}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{os}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{exists}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}queue\PYGZus{}lengths\PYGZsq{}}\PYG{p}{):}
+            \PYG{n}{os}\PYG{o}{.}\PYG{n}{makedirs}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}queue\PYGZus{}lengths\PYGZsq{}}\PYG{p}{)}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{qlengths}\PYG{p}{)}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlim}\PYG{p}{(}\PYG{n}{left}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylim}\PYG{p}{(}\PYG{n}{bottom}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Length of the Queue\PYGZsq{}}\PYG{p}{)}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Step count\PYGZsq{}}\PYG{p}{)}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}queue\PYGZus{}lengths/Sudoku\PYGZhy{}Queue\PYGZhy{}length\PYGZhy{}plot\PYGZhy{}\PYGZob{}\PYGZcb{}.png\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{))}
+        \PYG{c+c1}{\PYGZsh{} plt.show()}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{close}\PYG{p}{()}
+\end{Verbatim}
