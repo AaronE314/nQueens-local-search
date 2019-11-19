@@ -7,9 +7,10 @@ class Node:
         self.col = col
         if value is not None: 
             self.value = int(value)
+            self.domain = [int(value)]
         else : 
             self.value = value
-        self.domain = list(domain)
+            self.domain = list(domain)
         
 
     def __str__(self):
@@ -36,6 +37,8 @@ class Arc:
         if(self.Xi.value is not None and self.Xi.value == self.Xj.value):
             notSolvable = True 
         elif (self.Xj.value != None and self.Xj.value in self.Xi.domain):
+            if(self.Xi.row== 0 and self.Xi.col == 1 ):
+                print()
             self.Xi.domain.remove((self.Xj.value))
             if (len(self.Xi.domain)< 0 ): 
                 notSolvable = True
@@ -99,7 +102,7 @@ def AC3(puzzle):
                         
     noSolution = False
     while (queue.qsize() >  0  and not noSolution): 
-        #Get first Node
+        #Get first Arc
         arc = queue.get_nowait()
         node = arc.Xi
         
@@ -385,7 +388,7 @@ def getNextNode(puzzle):
 
     return nextNode
 
-def print_board(puzzle, detailed=False):
+def print_board(puzzle, detailed=True):
 
     print('- ' * 13)
     for row in puzzle:
