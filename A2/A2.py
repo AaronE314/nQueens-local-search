@@ -513,7 +513,11 @@ if __name__ == "__main__":
 
     num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 
+<<<<<<< HEAD
     puzzles, _ = loadPuzzle(file='./puzzles/imposible.csv',num=num, start=0, header=False)
+=======
+    puzzles, _ = loadPuzzle(file='./puzzles/test.txt',num=num, header=False)
+>>>>>>> bf624cee29e1d17ba549fabe37e97986ca21889f
 
     if num == 1:
         puzzles = [puzzles]
@@ -530,24 +534,24 @@ if __name__ == "__main__":
 
         if completed:
             print("Sudoku solved using AC3")
-            # print_board_and_sol(original_puzzle, finishedPuzzle)
-            print_board(original_puzzle, detailed=True)
-            print_board(finishedPuzzle, detailed=True)
+            print_board_and_sol(original_puzzle, finishedPuzzle)
+            # print_board(original_puzzle, detailed=True)
+            # print_board(finishedPuzzle, detailed=True)
         elif noSolution:
             print('No Solution!')
-            print_board(original_puzzle, detailed=True)
+            print_board(original_puzzle)
         else:
 
             print('Board used Backtracking')
             ac3_puzzle = deepcopy(finishedPuzzle)
             finishedPuzzle2, finished = backtrackSearch(finishedPuzzle)
-            # print_board_and_sol_and_ac3(original_puzzle, ac3_puzzle, finishedPuzzle2)
-            print("Original Puzzle")
-            print_board(original_puzzle, detailed=True)
-            print("After AC3")
-            print_board(ac3_puzzle, detailed=True)
-            print("Solution")
-            print_board(finishedPuzzle2, detailed=True)
+            print_board_and_sol_and_ac3(original_puzzle, ac3_puzzle, finishedPuzzle2)
+            # print("Original Puzzle")
+            # print_board(original_puzzle, detailed=True)
+            # print("After AC3")
+            # print_board(ac3_puzzle, detailed=True)
+            # print("Solution")
+            # print_board(finishedPuzzle2, detailed=True)
             if not finished:
                 print("Backtracking Failed to find a solution")
                 print_board(finishedPuzzle2)
