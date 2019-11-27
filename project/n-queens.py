@@ -68,8 +68,8 @@ def countPairs(puzzle,n ):
 def localSearch(puzzle , maxSteps, n ):
     blacklistedQueens = []
     for i in range(maxSteps):
-        #if (i %100 == 0  ): 
-        #    print("BenchMark")
+        if (i %100 == 0  ): 
+            print("BenchMark")
 
         m = len(puzzle.conflictQueens)    
 
@@ -78,21 +78,24 @@ def localSearch(puzzle , maxSteps, n ):
         while(currentQueen in blacklistedQueens): 
             index = np.random.randint(0,m )
             currentQueen = puzzle.conflictQueens[index]
+            if len(puzzle.conflictQueens) == len(blacklistedQueens):
+                print("LOCAL MINIMA FOUND")
+                return puzzle , i ,False
 
 
         pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n) 
         if (minRow != currentQueen.row): 
             puzzle.queens[currentQueen.col].row = minRow
             blacklistedQueens = []
-            blacklistedQueens.append(currentQueen)
+
         else :
              blacklistedQueens.append(currentQueen)
         puzzle.pairsCount = countPairs(puzzle,n )
-        print("----------------------------------")
-        printBoard(puzzle)
-        print()
-        print(puzzle)
-        print("----------------------------------")
+        # print("----------------------------------")
+        # printBoard(puzzle)
+        # print()
+        # print(puzzle)
+        # print("----------------------------------")
         if (puzzle.pairsCount == 0 ): 
             return puzzle, i, True
     return puzzle , i ,False
@@ -146,14 +149,20 @@ def printBoard(puzzle):
     print("Pairs = {}".format(puzzle.pairsCount))
 
 if __name__ == "__main__": 
-    n = 4
+    n = 100
     newPuzzle = puzzle(n )
     print(newPuzzle)
     printBoard(newPuzzle)
-    solution, i,solved  = localSearch(newPuzzle,10,n)
+    solution, i,solved  = localSearch(newPuzzle,4500,n)
     if solved: 
         print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
-        printBoard(solution)
+        if n < 17:
+            printBoard(solution)
+        else : 
+            print(solution)
     else: 
         print("=====================NO SOLUTION FOUND AFTER {} STEPS=====================".format(i))
-        printBoard(newPuzzle)
+        if n < 17:
+            printBoard(solution)
+        else : 
+            print(solution)
