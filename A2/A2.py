@@ -41,10 +41,8 @@ class Arc:
         if(self.Xi.value is not None and self.Xi.value == self.Xj.value):
             notSolvable = True 
         elif (self.Xj.value != None and self.Xj.value in self.Xi.domain):
-            if(self.Xi.row== 0 and self.Xi.col == 1 ):
-                print()
             self.Xi.domain.remove((self.Xj.value))
-            if (len(self.Xi.domain)< 0 ): 
+            if (len(self.Xi.domain)<= 0 ): 
                 notSolvable = True
         return notSolvable
                 
@@ -130,7 +128,7 @@ def AC3(puzzle):
     noSolution = False
     qlengths.append(queue.qsize())
     while (queue.qsize() >  0  and not noSolution): 
-        #Get first Arc
+        #Get first Node
         arc = queue.get_nowait()
         node = arc.Xi
         
@@ -434,7 +432,7 @@ def getNextNode(puzzle):
                 nextNode = node
     return nextNode
 
-def print_board(puzzle, detailed=True):
+def print_board(puzzle, detailed=False):
 
     print('- ' * 13)
     for row in puzzle:
@@ -515,7 +513,7 @@ if __name__ == "__main__":
 
     num = int(sys.argv[1]) if len(sys.argv) > 1 else 1
 
-    puzzles, _ = loadPuzzle(file='./puzzles/random.csv',num=num, start=49, header=True)
+    puzzles, _ = loadPuzzle(file='./puzzles/imposible.csv',num=num, start=0, header=False)
 
     if num == 1:
         puzzles = [puzzles]
