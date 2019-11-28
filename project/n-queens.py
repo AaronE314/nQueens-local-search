@@ -1,4 +1,4 @@
-import numpy as np 
+from random import randint
 
 class Queen : 
     def __init__(self, col ,row,pairs=0 ): 
@@ -29,7 +29,7 @@ class puzzle:
                 self.queens.append(Queen(i, array[i]))
         else : 
             for i in range(n): 
-                self.queens.append(Queen(i,np.random.randint(0,n)))
+                self.queens.append(Queen(i,randint(0,n - 1)))
         self.conflictQueens = []
         self.pairsCount = countPairs(self,n)
         
@@ -75,7 +75,7 @@ def localSearch(puzzle , maxSteps, n ):
     thisCount = 1
     for i in range(maxSteps):
         if (i %100 == 0  ): 
-            print(puzzle.conflictQueens)
+            #print(puzzle.conflictQueens)
             print("BenchMark")
 
         if (lastCount == thisCount ):
@@ -89,7 +89,7 @@ def localSearch(puzzle , maxSteps, n ):
 
         m = len(puzzle.conflictQueens)    
 
-        index = np.random.randint(0,m )
+        index = randint(0,m-1 )
         currentQueen = puzzle.conflictQueens[index]
         # print(currentQueen)
         # while(currentQueen in blacklistedQueens): 
@@ -100,9 +100,10 @@ def localSearch(puzzle , maxSteps, n ):
         #         return puzzle , i ,False
 
 
-        pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n,savedInstances) 
+        pairMin, minRow = findMinimum( puzzle,n,savedInstances, currentQueen) 
         if (minRow != currentQueen.row): 
             puzzle.queens[currentQueen.col].row = minRow
+            puzzle.queens[currentQueen.col].pairsCount = pairMin
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
                     savedInstances.append((currentQueen.col,currentQueen.row))
         else :
@@ -113,11 +114,11 @@ def localSearch(puzzle , maxSteps, n ):
         puzzle.pairsCount = countPairs(puzzle,n )
         lastCount = thisCount 
         thisCount = puzzle.pairsCount
-        # print("----------------------------------")
-        # printBoard(puzzle)
-        # print()
-        # print(puzzle)
-        # print("----------------------------------")
+        print("----------------------------------")
+        printBoard(puzzle)
+        print()
+        print(puzzle)
+        print("----------------------------------")
         if (puzzle.pairsCount == 0 ): 
             return puzzle, i, True
     return puzzle , i ,False
@@ -125,48 +126,75 @@ def localSearch(puzzle , maxSteps, n ):
 #TODO
 #this is the function that will be called by localSearch() to decide which step to take next
 #any ties broken by breakTies()
-def findMinimum(row, col, puzzle, n,savedInstances  ):
+def findMinimum( puzzle, n,savedInstances ,currentQueen ):
+    row= currentQueen.row
+    col=currentQueen.col
     queens = puzzle.queens
     pairMin= n + 1 
     MinRow = row
     MinRowArray = [] 
+    minQueenPairsArray = []
     for i in range(n): #put queen in n rows
         pairCount = 0 
+        tempArr = []
         for j in range(n): #check other columns for value in same row
             if (j != col and queens[j].row == i ) or (j != col and abs(queens[j].row - i ) == abs(j - col )): 
                 pairCount +=1 
+                tempArr.append(queens[j])
+
 
         if (pairMin > pairCount):
             pairMin = pairCount
             MinRow = i
             MinRowArray= []
+            minQueenPairsArray = []
             MinRowArray.append(i)
+            minQueenPairsArray.append(tempArr)
 
         elif(pairMin == pairCount and i != row):
             MinRow = i  
             MinRowArray.append(i)
+            minQueenPairsArray.append(tempArr)
 
         if (pairMin == 0 ): 
+            minQueenPairsArray= []
+
+            #updatePairs(0 , minQueenPairsArray, currentQueen, puzzle,pairMin)
             return pairMin, MinRow
 
-
+    i = 0 
     for index in MinRowArray: 
         temp = (col , index)
-        if temp not in savedInstances: 
+        if temp not in savedInstances:
+            #updatePairs(i , minQueenPairsArray, currentQueen, puzzle,pairMin)
             return pairMin, index 
-    else : 
-        return pairMin, MinRow
+        i +=1 
 
-#TODO 
-# This is the name of the search algo that stops the 'plateau' effect. when all moves on the board have the same minimum but none are solutions 
-def tabuSearch(puzzle, maxSearch):
-    print()
+    #updatePairs(-1 , minQueenPairsArray, currentQueen, puzzle,pairMin)
+    return pairMin, MinRow
+
+def updatePairs(index , minQueenPairsArray, currentQueen, puzzle,pairMin):
+    print(currentQueen)
+    print(currentQueen.pairs)
+    for queen in currentQueen.pairs: 
+        print(queen)
+        print(queen.pairs)
+        queen.pairs.remove(currentQueen)
+        queen.pairsCount -=1 
+        if queen.pairsCount == 0: 
+            puzzle.conflictQueens.remove(queen)
 
 
-#TODO
-#heuristically break ties found by findMinimum()
-def breakTies():
-    print()
+
+    if len(minQueenPairsArray) > 0 : 
+        for queen in minQueenPairsArray[index]:
+            queen.pairs.append(currentQueen)
+            queen.pairsCount +=1 
+            if queen.pairsCount == 1 : 
+                puzzle.conflictQueens.append(queen)
+
+    puzzle.pairsCount = puzzle.pairsCount - currentQueen.pairsCount + pairMin
+         
 
 def printBoard(puzzle):
     arr = puzzle.queens
@@ -181,11 +209,11 @@ def printBoard(puzzle):
     print("Pairs = {}".format(puzzle.pairsCount))
 
 if __name__ == "__main__": 
-    n = 100
+    n = 10
     array = [8,4,7,0,2,9,6,9,3,2]
     newPuzzle = puzzle(n  )
     #print(newPuzzle)
-    #printBoard(newPuzzle)
+    printBoard(newPuzzle)
     solution, i,solved  = localSearch(newPuzzle,4500,n)
     if solved: 
         print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
