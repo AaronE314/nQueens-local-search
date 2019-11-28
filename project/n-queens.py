@@ -1,4 +1,5 @@
-import numpy as np 
+from random import randint
+import time
 
 class Queen : 
     def __init__(self, col ,row,pairs=0 ): 
@@ -29,7 +30,7 @@ class puzzle:
                 self.queens.append(Queen(i, array[i]))
         else : 
             for i in range(n): 
-                self.queens.append(Queen(i,np.random.randint(0,n)))
+                self.queens.append(Queen(i,randint(0,n - 1)))
         self.conflictQueens = []
         self.pairsCount = countPairs(self,n)
         
@@ -74,12 +75,12 @@ def localSearch(puzzle , maxSteps, n ):
     lastCount = 0 
     thisCount = 1
     for i in range(maxSteps):
-        if (i %100 == 0  ): 
-            print(puzzle.conflictQueens)
-            print("BenchMark")
+        # if (i %100 == 0  ): 
+            # print(puzzle.conflictQueens)
+            # print("BenchMark")
 
         if (lastCount == thisCount ):
-            print("CONFLICT")
+            # print("CONFLICT")
             for queen in puzzle.conflictQueens: 
                 if (queen.col, queen.row) not in savedInstances: 
                     savedInstances.append((queen.col,queen.row))
@@ -89,7 +90,7 @@ def localSearch(puzzle , maxSteps, n ):
 
         m = len(puzzle.conflictQueens)    
 
-        index = np.random.randint(0,m )
+        index = randint(0,m - 1 )
         currentQueen = puzzle.conflictQueens[index]
         # print(currentQueen)
         # while(currentQueen in blacklistedQueens): 
@@ -186,7 +187,9 @@ if __name__ == "__main__":
     newPuzzle = puzzle(n  )
     #print(newPuzzle)
     #printBoard(newPuzzle)
+    t = time.time()
     solution, i,solved  = localSearch(newPuzzle,4500,n)
+    print("Time: ", time.time() - t)
     if solved: 
         print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
         if n < 17:
