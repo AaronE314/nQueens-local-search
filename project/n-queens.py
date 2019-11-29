@@ -1,5 +1,7 @@
 from random import randint
+from operator import add
 import time
+import sys
 
 class Queen : 
     def __init__(self, col ,row,pairs=0 ): 
@@ -21,7 +23,7 @@ class Queen :
         return not self.__eq__(other)
 
 class puzzle: 
-    def __init__(self, n  ,array= None): 
+    def __init__(self, n, array= None): 
     
         #random initial state, could be greedy
         self.queens = []
@@ -29,10 +31,12 @@ class puzzle:
             for i in range(n): 
                 self.queens.append(Queen(i, array[i]))
         else : 
-            for i in range(n): 
-                self.queens.append(Queen(i,randint(0,n - 1)))
+            # for i in range(n): 
+            #     self.queens.append(Queen(i,randint(0,n - 1)))
+            self.queens = createBoard2(n)
         self.conflictQueens = []
-        self.pairsCount = countPairs(self,n)
+        # print("old:",countPairs(self,n))
+        self.pairsCount = countPairs2(self,n)
         
     def __str__(self):
         return '\n Pairs = {}\n conflicted Queens = {}'.format( self.pairsCount,self.conflictQueens)
@@ -40,8 +44,79 @@ class puzzle:
     def __repr__(self):
         return '\n Pairs = {} conflicted Queens = {}'.format( self.pairsCount,self.conflictQueens)
 
+def createBoard(n):
+
+    queens = [Queen(0, randint(0, n - 1))]
+
+    for cCol in range(1, n):
+        f_row = [0] * n
+        f_mdiag = [0] * n
+        f_sdiag = [0] * n
+
+        for i in range(len(queens)):
+
+            row = queens[i].row
+            if i != cCol:
+                f_row[row] += 1
+
+            if cCol <= row + i <= cCol + (n - 1):
+                f_mdiag[row + i - cCol] += 1
+            if cCol + 1 <= n - row + i <= n + cCol:
+                f_sdiag[abs((n - row + i) - (n + cCol))] += 1
+
+        total = list(map(add, list(map(add, f_row, f_mdiag)), f_sdiag))
+
+        m = min(total)
+        mins = [(x, i) for i, x in enumerate(total) if x == m]
+
+        i = randint(0, len(mins) - 1)
+        r = mins[i][1]
+
+        queens.append(Queen(cCol, r))
+
+    return queens
+
+def createBoard2(n):
+
+    row = [0] * n
+    ld = [0] * n
+    rd = [0] * n
+
+    i = randint(0, n - 1)
+
+    row[i] += 1
+    ld[i] += 1
+    rd[i] += 1
+
+    queens = [Queen(0, i)]
+
+    for col in range(1, n):
+        # t = time.time()
+        q = queens[col - 1]
+        ld = [0] + ld[:-1]
+        rd = rd[1:] + [0]
+        # print("Time 1:", time.time() - t) 
+
+        # t = time.time()
+        total = list(map(add, list(map(add, row, ld)), rd))
+        # print("Time 2:", time.time() - t) 
+        # t = time.time()
+        m = min(total)
+        mins = [(x, i) for i, x in enumerate(total) if x == m]
+        # print("Time 3:", time.time() - t) 
+
+        i = randint(0, len(mins) - 1)
+        r = mins[i][1]
+
+        row[r] += 1
+        ld[r] += 1
+        rd[r] += 1
+
+        queens.append(Queen(col, r))
+    return queens
+
 #TODO
-#this function recalculates the number of pairs in the puzzle 
+#this function recalculates the number of pairs in the puzzle
 def countPairs(puzzle,n ):
     totalPairs = 0 
     for i in range(n): 
@@ -67,6 +142,57 @@ def countPairs(puzzle,n ):
         currentQueen.pairsCount = pairs
     return totalPairs//2
 
+def countPairs2(puzzle, n):
+
+    count = 0
+    f_row = [0] * n
+    f_mdiag = [0] * (n + n)
+    f_sdiag = [0] * (n + n)
+    queens = puzzle.queens
+    puzzle.conflictQueens = []
+
+    cRow = dict({})
+    cmD = dict({})
+    csD = dict({})
+
+    # t = time.time()
+    for i in range(n):
+        row = queens[i].row
+        f_row[row] += 1
+        if f_row[row] > 1:
+            cRow[row] = True
+        f_mdiag[row + i] += 1
+        if f_mdiag[row + i] > 1:
+            cmD[row + i] = True
+        f_sdiag[n - row + i] += 1
+        if f_sdiag[n - row + i] > 1:
+            csD[n - row + i] = True
+
+    # print("Part 1", time.time() - t)
+
+    # t = time.time()
+    for i in range(n + n):
+        x, y, z = 0, 0, 0
+
+        if i < n:
+            x = f_row[i]
+        y = f_mdiag[i]
+        z = f_sdiag[i]
+
+        count += (x * (x - 1)) // 2
+        count += (y * (y - 1)) // 2
+        count += (z * (z - 1)) // 2
+    # print("Part 2", time.time() - t)
+
+    # t = time.time()
+    for q in queens:
+
+        if q.row in cRow or q.row + q.col in cmD or n - q.row + q.col in csD:
+            puzzle.conflictQueens.append(q)
+    # print("Part 3", time.time() - t)
+    return count
+
+
 #TODO
 #this is the main driver for finding the solution
 def localSearch(puzzle , maxSteps, n ):
@@ -75,9 +201,9 @@ def localSearch(puzzle , maxSteps, n ):
     lastCount = 0 
     thisCount = 1
     for i in range(maxSteps):
-        # if (i %100 == 0  ): 
+        if i %100 == 0: 
             # print(puzzle.conflictQueens)
-            # print("BenchMark")
+            print("BenchMark:", i)
 
         if (lastCount == thisCount ):
             # print("CONFLICT")
@@ -100,18 +226,21 @@ def localSearch(puzzle , maxSteps, n ):
         #         print("LOCAL MINIMA FOUND")
         #         return puzzle , i ,False
 
-
-        pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n,savedInstances) 
+        # t = time.time()
+        pairMin, minRow = findMinimum2(currentQueen.row,currentQueen.col, puzzle,n,savedInstances)
+        # print("Mins:", time.time() - t)
         if (minRow != currentQueen.row): 
             puzzle.queens[currentQueen.col].row = minRow
+            puzzle.queens[currentQueen.col].pairsCount = pairMin
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
                     savedInstances.append((currentQueen.col,currentQueen.row))
         else :
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
                     savedInstances.append((currentQueen.col,currentQueen.row))
 
-
-        puzzle.pairsCount = countPairs(puzzle,n )
+        # t = time.time()
+        puzzle.pairsCount = countPairs2(puzzle,n)
+        # print("Counts:", time.time() - t)
         lastCount = thisCount 
         thisCount = puzzle.pairsCount
         # print("----------------------------------")
@@ -135,7 +264,9 @@ def findMinimum(row, col, puzzle, n,savedInstances  ):
         pairCount = 0 
         for j in range(n): #check other columns for value in same row
             if (j != col and queens[j].row == i ) or (j != col and abs(queens[j].row - i ) == abs(j - col )): 
-                pairCount +=1 
+                pairCount += 1 
+                if pairMin < pairCount:
+                    break
 
         if (pairMin > pairCount):
             pairMin = pairCount
@@ -158,16 +289,42 @@ def findMinimum(row, col, puzzle, n,savedInstances  ):
     else : 
         return pairMin, MinRow
 
-#TODO 
-# This is the name of the search algo that stops the 'plateau' effect. when all moves on the board have the same minimum but none are solutions 
-def tabuSearch(puzzle, maxSearch):
-    print()
+def findMinimum2(cRow, cCol, puzzle, n,savedInstances  ):
 
+    f_row = [0] * n
+    f_mdiag = [0] * n
+    f_sdiag = [0] * n
+    queens = puzzle.queens
 
-#TODO
-#heuristically break ties found by findMinimum()
-def breakTies():
-    print()
+    cmD = cRow + cCol
+    csD = n - cRow + cCol
+
+    for i in range(n):
+
+        row = queens[i].row
+        if i != cCol:
+            f_row[row] += 1
+
+        if cCol <= row + i <= cCol + (n - 1):
+            f_mdiag[row + i - cCol] += 1
+        if cCol + 1 <= n - row + i <= n + cCol:
+            f_sdiag[abs((n - row + i) - (n + cCol))] += 1
+
+    total = list(map(add, list(map(add, f_row, f_mdiag)), f_sdiag))
+
+    m = min(total)
+    mins = [(x, i) for i, x in enumerate(total) if x == m]
+
+    if mins[-1][0] == 0:
+        return mins[-1]
+    
+    for x, i in mins:
+        temp = (cCol, i)
+        if temp not in savedInstances:
+            return x, i
+    else:
+        return mins[-1]
+
 
 def printBoard(puzzle):
     arr = puzzle.queens
@@ -182,23 +339,31 @@ def printBoard(puzzle):
     print("Pairs = {}".format(puzzle.pairsCount))
 
 if __name__ == "__main__": 
-    n = 100
+    n = 8 if len(sys.argv) < 2 else int(sys.argv[1])
     array = [8,4,7,0,2,9,6,9,3,2]
-    newPuzzle = puzzle(n  )
+    print("Generating board")
+    t = time.time()
+    newPuzzle = puzzle(n)
+    print("Board Generated in {:.5f}s".format(time.time() - t))
+
+    if n < 17:
+        printBoard(newPuzzle)
+    else:
+        print("Initial Pairs = {}".format(newPuzzle.pairsCount))
     #print(newPuzzle)
     #printBoard(newPuzzle)
     t = time.time()
     solution, i,solved  = localSearch(newPuzzle,4500,n)
-    print("Time: ", time.time() - t)
+    print("Time: {:.5f}s".format(time.time() - t))
     if solved: 
         print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
         if n < 17:
             printBoard(solution)
-        else : 
-            print(solution)
+        # else : 
+            # print(solution)
     else: 
         print("=====================NO SOLUTION FOUND AFTER {} STEPS=====================".format(i))
         if n < 17:
             printBoard(solution)
-        else : 
-            print(solution)
+        # else : 
+            # print(solution)
