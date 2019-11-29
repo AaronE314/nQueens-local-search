@@ -3,6 +3,8 @@ from operator import add
 import time
 import sys
 
+import numpy as np
+
 class Queen : 
     def __init__(self, col ,row,pairs=0 ): 
         self.col = col 
@@ -32,8 +34,8 @@ class puzzle:
                 self.queens.append(Queen(i, array[i]))
         else : 
             # for i in range(n): 
-            #     self.queens.append(Queen(i,randint(0,n - 1)))
-            self.queens = createBoard2(n)
+                # self.queens.append(Queen(i,randint(0,n - 1)))
+            self.queens = createBoard3(n)
         self.conflictQueens = []
         # print("old:",countPairs(self,n))
         self.pairsCount = countPairs2(self,n)
@@ -113,6 +115,50 @@ def createBoard2(n):
         rd[r] += 1
 
         queens.append(Queen(col, r))
+    return queens
+
+def createBoard3(N):
+
+    row = np.zeros(N)
+    ld = np.zeros(N)
+    rd = np.zeros(N)
+
+    total = row + ld + rd
+
+    r = np.random.randint(0, N)
+
+    row[r] = 1
+    ld[r] = 1
+    rd[r] = 1
+
+    queens = [Queen(0, r)]
+
+    for col in range(1, N):
+
+        if N >= 100000:
+            if col % 1000 == 0:
+                print("Progress: {}/{}".format(col, N), end='\r') 
+        
+        q = queens[col - 1]
+        ld = np.roll(ld, 1)
+        ld[0] = 0
+        rd = np.roll(rd, -1)
+        rd[-1] = 0
+
+        total = row + ld + rd
+
+        minT = np.where(total == total.min())[0]
+        # r = total[r]
+
+        r = np.random.randint(0, minT.shape[0])
+        r = minT[r]
+
+        row[r] += 1
+        ld[r] += 1
+        rd[r] += 1
+
+        queens.append(Queen(col, r))
+    print()
     return queens
 
 #TODO
@@ -352,18 +398,21 @@ if __name__ == "__main__":
         print("Initial Pairs = {}".format(newPuzzle.pairsCount))
     #print(newPuzzle)
     #printBoard(newPuzzle)
-    t = time.time()
-    solution, i,solved  = localSearch(newPuzzle,4500,n)
-    print("Time: {:.5f}s".format(time.time() - t))
-    if solved: 
-        print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
-        if n < 17:
-            printBoard(solution)
-        # else : 
-            # print(solution)
-    else: 
-        print("=====================NO SOLUTION FOUND AFTER {} STEPS=====================".format(i))
-        if n < 17:
-            printBoard(solution)
-        # else : 
-            # print(solution)
+
+    if newPuzzle.pairsCount != 0:
+
+        t = time.time()
+        solution, i,solved  = localSearch(newPuzzle,4500,n)
+        print("Time: {:.5f}s".format(time.time() - t))
+        if solved: 
+            print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
+            if n < 17:
+                printBoard(solution)
+            # else : 
+                # print(solution)
+        else: 
+            print("=====================NO SOLUTION FOUND AFTER {} STEPS=====================".format(i))
+            if n < 17:
+                printBoard(solution)
+            # else : 
+                # print(solution)
