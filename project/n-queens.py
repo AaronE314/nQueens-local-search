@@ -4,11 +4,14 @@ import time
 import sys
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Queen: 
     def __init__(self, col ,row, pairs=0): 
         self.col = col 
         self.row = row
+        self.pairsCount = pairs
 
     def __str__(self):
         return '\nCol={} , Row={} , Pairs={} '.format(self.col, self.row, self.pairsCount)
@@ -155,10 +158,14 @@ def localSearch(puzzle, maxSteps, n):
         The number of steps
         If it was solved
     '''
+    global conflicts
+    global conflictspair
     savedInstances = [] 
     blacklistedQueens = []
     lastCount = 0 
     thisCount = 1
+    conflicts.append(len(puzzle.conflictQueens))
+    conflictspair.append(puzzle.pairsCount)
     for i in range(maxSteps):
         if i %100 == 0: 
             print("BenchMark:", i)
@@ -188,9 +195,12 @@ def localSearch(puzzle, maxSteps, n):
         puzzle.pairsCount = countPairs(puzzle,n)
         lastCount = thisCount 
         thisCount = puzzle.pairsCount
-
+        #append count to conflict(s) array
+        conflicts.append(len(puzzle.conflictQueens))
+        conflictspair.append(puzzle.pairsCount)
         if puzzle.pairsCount == 0: 
             return puzzle, i, True
+        
     return puzzle, i, False
 
 def findMinimum(cRow, cCol, puzzle, n, savedInstances):
@@ -271,7 +281,9 @@ def printBoard(puzzle):
                 print(".|",end="")
         print()
     print("Pairs = {}".format(puzzle.pairsCount))
-
+#was not sure if you wanted the count of the pairs of the conlfited queens or just the total numnber of confliced queens
+conflicts=[]
+conflictspair=[]
 if __name__ == "__main__": 
     n = 8 if len(sys.argv) < 2 else int(sys.argv[1])
     array = [8,4,7,0,2,9,6,9,3,2]
@@ -306,3 +318,19 @@ if __name__ == "__main__":
                 print("Initial Pairs = {}".format(newPuzzle.pairsCount))
             # else : 
                 # print(solution)
+    #ploting the conflict count
+    plt.plot(conflicts)
+    plt.xlim(left=0)        
+    plt.ylim(bottom=0)
+    plt.ylabel('Number of confliced queens')
+    plt.xlabel('Step count')
+    plt.savefig('n-queens-conflict-count-plot.png')
+    plt.close()
+    #ploting the conflict pair count
+    plt.plot(conflictspair)
+    plt.xlim(left=0)        
+    plt.ylim(bottom=0)
+    plt.ylabel('Number of confliced queen pairs')
+    plt.xlabel('Step count')
+    plt.savefig('n-queens-conflict-pair-count-plot.png')
+    plt.close()
