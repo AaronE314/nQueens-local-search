@@ -11,10 +11,10 @@ class Queen:
         self.row = row
 
     def __str__(self):
-        return '\nCol={} , Row={} , Pairs={} '.format(self.col, self.row, self.pairsCount)
+        return '\nCol={}, Row={}'.format(self.col, self.row)
 
     def __repr__(self):
-        return '\nCol={} , Row={} , Pairs={} '.format(self.col, self.row, self.pairsCount)
+        return '\nCol={}, Row={}'.format(self.col, self.row)
 
     def __eq__(self,other): 
         return self.col == other.col
@@ -45,47 +45,41 @@ class puzzle:
 
 def createBoard(N):
     '''
-    Creates the inital state of the board by adding the next queen to the spot with the least conflicts
+    Creates the inital state of the board by adding the next queen to the spot with the least conflicts O(2n^2)
     ---------------------------
     Params:
         n: the size of the board
     returns:
         puzzle: a 1-d list of size n containing a queen at each column
     '''
-    row = np.zeros(N)
-    ld = np.zeros(N)
-    rd = np.zeros(N)
-
-    total = row + ld + rd
+    row = np.zeros(N, dtype=int)
+    ld = np.zeros(N + N, dtype=int)
+    rd = np.zeros(N + N, dtype=int)
 
     r = np.random.randint(0, N)
 
     row[r] = 1
     ld[r] = 1
-    rd[r] = 1
+    rd[N - r] = 1
 
     queens = [Queen(0, r)]
 
-    for col in range(1, N):
+    for col in range(1, N): # O(N)
 
         if N >= 100000:
             if col % 1000 == 0:
                 print("Progress: {}/{}".format(col, N), end='\r') 
-        
-        ld = np.roll(ld, 1)
-        ld[0] = 0
-        rd = np.roll(rd, -1)
-        rd[-1] = 0
 
-        total = row + ld + rd
-        minT = np.where(total == total.min())[0]
-
+        p = ld[col: col + N]
+        q = (rd[col + 1: col + N + 1])[::-1]
+        total = row + p + q # O(N)
+        minT = np.where(total == total.min())[0] # O(N)
         r = np.random.randint(0, minT.shape[0])
         r = minT[r]
 
         row[r] += 1
-        ld[r] += 1
-        rd[r] += 1
+        ld[r + col] += 1
+        rd[N - r + col] += 1
 
         queens.append(Queen(col, r))
     print()
@@ -93,7 +87,7 @@ def createBoard(N):
 
 def countPairs(puzzle, n):
     '''
-    Counts the total number of pairs in the board
+    Counts the total number of pairs in the board O(4n)
     ---------------------------
     Params:
         puzzle: A puzzle for the current state
@@ -112,7 +106,7 @@ def countPairs(puzzle, n):
     cmD = dict({})
     csD = dict({})
 
-    for i in range(n):
+    for i in range(n): # O(n)
         row = queens[i].row
         f_row[row] += 1
         if f_row[row] > 1:
@@ -124,7 +118,7 @@ def countPairs(puzzle, n):
         if f_sdiag[n - row + i] > 1:
             csD[n - row + i] = True
 
-    for i in range(n + n):
+    for i in range(n + n): # O(2n)
         x, y, z = 0, 0, 0
 
         if i < n:
@@ -136,7 +130,7 @@ def countPairs(puzzle, n):
         count += (y * (y - 1)) // 2
         count += (z * (z - 1)) // 2
 
-    for q in queens:
+    for q in queens: # O(n)
 
         if q.row in cRow or q.row + q.col in cmD or n - q.row + q.col in csD:
             puzzle.conflictQueens.append(q)
@@ -144,7 +138,7 @@ def countPairs(puzzle, n):
 
 def localSearch(puzzle, maxSteps, n):
     '''
-    Performs min conflics local search of the puzzle
+    Performs min conflics local search of the puzzle O(6n)
     ---------------------------
     Params:
         puzzle: A puzzle for the current state
@@ -155,37 +149,37 @@ def localSearch(puzzle, maxSteps, n):
         The number of steps
         If it was solved
     '''
-    savedInstances = [] 
+    savedInstances = dict({})
     blacklistedQueens = []
     lastCount = 0 
     thisCount = 1
-    for i in range(maxSteps):
+    for i in range(maxSteps): # O(k)
         if i %100 == 0: 
             print("BenchMark:", i)
 
         if lastCount == thisCount:
             for queen in puzzle.conflictQueens: 
                 if (queen.col, queen.row) not in savedInstances: 
-                    savedInstances.append((queen.col,queen.row))
+                    savedInstances[(queen.col,queen.row)] = True
         else : 
-            savedInstances = []
+            savedInstances = dict({})
 
         m = len(puzzle.conflictQueens)    
 
         index = randint(0, m - 1)
         currentQueen = puzzle.conflictQueens[index]
 
-        pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n,savedInstances)
+        pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n,savedInstances) # O(2n)
         if (minRow != currentQueen.row): 
             puzzle.queens[currentQueen.col].row = minRow
             puzzle.queens[currentQueen.col].pairsCount = pairMin
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
-                    savedInstances.append((currentQueen.col,currentQueen.row))
+                savedInstances[(currentQueen.col,currentQueen.row)] = True
         else:
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
-                    savedInstances.append((currentQueen.col,currentQueen.row))
+                savedInstances[(currentQueen.col,currentQueen.row)] = True
 
-        puzzle.pairsCount = countPairs(puzzle,n)
+        puzzle.pairsCount = countPairs(puzzle,n) # O(4n)
         lastCount = thisCount 
         thisCount = puzzle.pairsCount
 
@@ -195,7 +189,7 @@ def localSearch(puzzle, maxSteps, n):
 
 def findMinimum(cRow, cCol, puzzle, n, savedInstances):
     '''
-    Finds the next move to do for a given queen that will minimize the conflicts
+    Finds the next move to do for a given queen that will minimize the conflicts O(2n)
     ---------------------------
     Params:
         row: The row of the current queen
@@ -207,50 +201,35 @@ def findMinimum(cRow, cCol, puzzle, n, savedInstances):
         The new count for the conflicts
         The row to move the queen too
     '''
-    f_row = [0] * n
-    f_mdiag = [0] * n
-    f_sdiag = [0] * n
+
+    total = np.zeros(n)
     queens = puzzle.queens
 
-    cmD = cRow + cCol
-    csD = n - cRow + cCol
-
-    for i in range(n):
+    for i in range(n): # O(n)
 
         row = queens[i].row
         if i != cCol:
-            f_row[row] += 1
+            total[row] += 1
 
         if cCol <= row + i <= cCol + (n - 1):
-            f_mdiag[row + i - cCol] += 1
+            total[row + i - cCol] += 1
         if cCol + 1 <= n - row + i <= n + cCol:
-            f_sdiag[abs((n - row + i) - (n + cCol))] += 1
+            total[abs((n - row + i) - (n + cCol))] += 1
 
-    total = list(map(add, list(map(add, f_row, f_mdiag)), f_sdiag))
+    mins = np.where(total == total.min())[0] # O(n)
 
-    m = min(total)
-    mins = [(x, i) for i, x in enumerate(total) if x == m]
+    i = np.random.randint(0, mins.shape[0])
+    r = mins[i]
 
-    i = randint(0, len(mins) - 1)
-    r = mins[i][1]
-
-    if mins[-1][0] == 0:
-        return mins[-1]
-
-    # for _ in range(len(mins)):
-    #     print("In saved")
-    #     i = randint(0, len(mins) - 1)
-    #     r = mins[i][1]
-    #     mins.remove(r)
+    while len(mins) > 1 and (cCol, r) in savedInstances:
+        mins = np.delete(mins, i)
+        i = randint(0, len(mins) - 1)
+        r = mins[i]
     
-    # return mins[i]
-
-    for x, i in mins:
-        temp = (cCol, i)
-        if temp not in savedInstances:
-            return x, i
+    if len(mins) == 1:
+        return total[mins[0]], mins[0]
     else:
-        return mins[-1]
+        return total[mins[i]], mins[i]
 
 
 def printBoard(puzzle):
