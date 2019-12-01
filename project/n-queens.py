@@ -4,8 +4,8 @@ import time
 import sys
 import argparse
 
-import numpy as np
-import matplotlib.pyplot as plt
+import numpy as np  # pip install numpy
+import matplotlib.pyplot as plt # pip install matplotlib
 
 
 class Queen: 
@@ -29,9 +29,9 @@ class Queen:
 class puzzle: 
     def __init__(self, n, array=None): 
     
-        #random initial state, could be greedy
         self.queens = []
-        if array is not None : 
+        if array is not None:
+            n = len(array)
             for i in range(n): 
                 self.queens.append(Queen(i, array[i]))
         else : 
@@ -160,7 +160,7 @@ def localSearch(puzzle, maxSteps, n):
     lastCount = 0 
     thisCount = 1
     for i in range(maxSteps): # O(k)
-        if i %100 == 0: 
+        if i % 100 == 0: 
             print("Amount of Steps: {:5}".format(i), end='\r')
 
         if lastCount == thisCount:
@@ -192,7 +192,9 @@ def localSearch(puzzle, maxSteps, n):
         conflicts.append(len(puzzle.conflictQueens))
         conflictspair.append(puzzle.pairsCount)
         if puzzle.pairsCount == 0: 
+            print()
             return puzzle, i, True
+    print()
     return puzzle, i, False
 
 def findMinimum(cRow, cCol, puzzle, n, savedInstances):
@@ -258,7 +260,7 @@ def printBoard(puzzle):
                 print(".|",end="")
         print()
     print("Pairs = {}".format(puzzle.pairsCount))
-#was not sure if you wanted the count of the pairs of the conlfited queens or just the total numnber of confliced queens
+
 conflicts=[]
 conflictspair=[]
 if __name__ == "__main__": 
@@ -284,6 +286,7 @@ if __name__ == "__main__":
         with open(args.file, 'r') as f:
             for line in f:
                 initialPos.append(int(line))
+        n = len(initialPos)
         newPuzzle = puzzle(n, initialPos)
     else:
         print("Generating board")
@@ -306,7 +309,7 @@ if __name__ == "__main__":
             if n < 17:
                 printBoard(solution)
             else:
-                print("Initial Pairs = {}".format(newPuzzle.pairsCount))
+                print("Pairs = {}".format(newPuzzle.pairsCount))
             # else : 
                 # print(solution)
         else: 
@@ -314,9 +317,8 @@ if __name__ == "__main__":
             if n < 17:
                 printBoard(solution)
             else:
-                print("Initial Pairs = {}".format(newPuzzle.pairsCount))
-            # else : 
-                # print(solution)
+                print("Pairs = {}".format(newPuzzle.pairsCount))
+
     #ploting the conflict count
     plt.plot(conflicts)
     plt.xlim(left=0)        
