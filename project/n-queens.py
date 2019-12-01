@@ -1,17 +1,24 @@
-import numpy as np 
+from random import randint
+from operator import add
+import time
+import sys
+import argparse
 
-class Queen : 
-    def __init__(self, col ,row,pairs=0 ): 
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+class Queen: 
+    def __init__(self, col ,row, pairs=0): 
         self.col = col 
-        self.row = row 
-        self.pairsCount = pairs 
-        self.pairs = []
+        self.row = row
+        self.pairsCount = pairs
 
     def __str__(self):
-        return '\nCol={} , Row={} , Pairs={} '.format(self.col, self.row, self.pairsCount)
+        return '\nCol={}, Row={}'.format(self.col, self.row)
 
     def __repr__(self):
-        return '\nCol={} , Row={} , Pairs={} '.format(self.col, self.row, self.pairsCount)
+        return '\nCol={}, Row={}'.format(self.col, self.row)
 
     def __eq__(self,other): 
         return self.col == other.col
@@ -20,7 +27,7 @@ class Queen :
         return not self.__eq__(other)
 
 class puzzle: 
-    def __init__(self, n  ,array= None): 
+    def __init__(self, n, array=None): 
     
         #random initial state, could be greedy
         self.queens = []
@@ -28,209 +35,294 @@ class puzzle:
             for i in range(n): 
                 self.queens.append(Queen(i, array[i]))
         else : 
-            for i in range(n): 
-                self.queens.append(Queen(i,np.random.randint(0,n)))
+            # for i in range(n): 
+                # self.queens.append(Queen(i,randint(0,n - 1)))
+            self.queens = createBoard(n)
         self.conflictQueens = []
-        self.pairsCount = countPairs(self,n)
+        self.pairsCount = countPairs(self, n)
         
     def __str__(self):
-        return '\n Pairs = {}\n conflicted Queens = {}'.format( self.pairsCount,self.conflictQueens)
+        return '\n Pairs = {}\n conflicted Queens = {}'.format(self.pairsCount, self.conflictQueens)
 
     def __repr__(self):
-        return '\n Pairs = {} conflicted Queens = {}'.format( self.pairsCount,self.conflictQueens)
+        return '\n Pairs = {} conflicted Queens = {}'.format(self.pairsCount, self.conflictQueens)
 
-#TODO
-#this function recalculates the number of pairs in the puzzle 
-def countPairs(puzzle,n ):
-    totalPairs = 0 
-    for i in range(n): 
-        pairs =0 
-        currentQueen = puzzle.queens[i]
-        pairedArray = []
-        j= 0 
-        for j in range(n): #check other columns for value in same row
-            if ((j != currentQueen.col and puzzle.queens[j].row == currentQueen.row) or (j != currentQueen.col and abs(puzzle.queens[j].col- currentQueen.col ) == abs(puzzle.queens[j].row - currentQueen.row ))  ): 
-                pairs +=1
-                pairedArray.append(puzzle.queens[j]) 
+def createBoard(N):
+    '''
+    Creates the inital state of the board by adding the next queen to the spot with the least conflicts O(2n^2)
+    ---------------------------
+    Params:
+        n: the size of the board
+    returns:
+        puzzle: a 1-d list of size n containing a queen at each column
+    '''
+    row = np.zeros(N, dtype=np.int16)
+    ld = np.zeros(N + N, dtype=np.int16)
+    rd = np.zeros(N + N, dtype=np.int16)
 
+    r = np.random.randint(0, N)
 
-        if (pairs > 0  ): 
-            currentQueen.pairs = pairedArray
-            if (currentQueen not in puzzle.conflictQueens):
-                puzzle.conflictQueens.append(currentQueen)
-        else : 
-            currentQueen.pairs = []
-            if (currentQueen in puzzle.conflictQueens):
-                puzzle.conflictQueens.remove(currentQueen)
-        totalPairs += pairs
-        currentQueen.pairsCount = pairs
-    return totalPairs//2
+    row[r] = 1
+    ld[r] = 1
+    rd[N - r] = 1
 
-#TODO
-#this is the main driver for finding the solution
-def localSearch(puzzle , maxSteps, n ):
-    savedInstances = [] 
+    queens = [Queen(0, r)]
+
+    for col in range(1, N): # O(N)
+
+        if N >= 100000:
+            if col % 1000 == 0:
+                print("Progress: {}/{}".format(col, N), end='\r') 
+
+        p = ld[col: col + N]
+        q = (rd[col + 1: col + N + 1])[::-1]
+        total = row + p + q # O(N)
+        minT = np.where(total == total.min())[0] # O(N)
+        r = np.random.randint(0, minT.shape[0])
+        r = minT[r]
+
+        row[r] += 1
+        ld[r + col] += 1
+        rd[N - r + col] += 1
+
+        queens.append(Queen(col, r))
+    print()
+    return queens
+
+def countPairs(puzzle, n):
+    '''
+    Counts the total number of pairs in the board O(4n)
+    ---------------------------
+    Params:
+        puzzle: A puzzle for the current state
+        n: the size of the board
+    returns:
+        counts: the count of the pairs
+    '''
+    count = 0
+    f_row = [0] * n
+    f_mdiag = [0] * (n + n)
+    f_sdiag = [0] * (n + n)
+    queens = puzzle.queens
+    puzzle.conflictQueens = []
+
+    cRow = dict({})
+    cmD = dict({})
+    csD = dict({})
+
+    for i in range(n): # O(n)
+        row = queens[i].row
+        f_row[row] += 1
+        if f_row[row] > 1:
+            cRow[row] = True
+        f_mdiag[row + i] += 1
+        if f_mdiag[row + i] > 1:
+            cmD[row + i] = True
+        f_sdiag[n - row + i] += 1
+        if f_sdiag[n - row + i] > 1:
+            csD[n - row + i] = True
+
+    for i in range(n + n): # O(2n)
+        x, y, z = 0, 0, 0
+
+        if i < n:
+            x = f_row[i]
+        y = f_mdiag[i]
+        z = f_sdiag[i]
+
+        count += (x * (x - 1)) // 2
+        count += (y * (y - 1)) // 2
+        count += (z * (z - 1)) // 2
+
+    for q in queens: # O(n)
+
+        if q.row in cRow or q.row + q.col in cmD or n - q.row + q.col in csD:
+            puzzle.conflictQueens.append(q)
+    return count
+
+def localSearch(puzzle, maxSteps, n):
+    '''
+    Performs min conflics local search of the puzzle O(6n)
+    ---------------------------
+    Params:
+        puzzle: A puzzle for the current state
+        maxSteps: The maximum number of steps to try before aborting
+        n: the size of the board
+    returns:
+        The finished puzzle
+        The number of steps
+        If it was solved
+    '''
+    global conflicts
+    global conflictspair
+    savedInstances = dict({})
     blacklistedQueens = []
     lastCount = 0 
     thisCount = 1
-    for i in range(maxSteps):
-        if (i %100 == 0  ): 
-            #print(puzzle.conflictQueens)
-            print("BenchMark")
-
-        if (lastCount == thisCount ):
-            print("CONFLICT")
-            for queen in puzzle.conflictQueens: 
                 if (queen.col, queen.row) not in savedInstances: 
-                    savedInstances.append((queen.col,queen.row))
-            # print(savedInstances)
+                    savedInstances[(queen.col,queen.row)] = True
         else : 
-            savedInstances = []
 
         m = len(puzzle.conflictQueens)    
 
-        index = np.random.randint(0,m )
+        index = randint(0, m - 1)
         currentQueen = puzzle.conflictQueens[index]
-        # print(currentQueen)
-        # while(currentQueen in blacklistedQueens): 
-        #     index = np.random.randint(0,m )
-        #     currentQueen = puzzle.conflictQueens[index]
-        #     if len(puzzle.conflictQueens) == len(blacklistedQueens):
-        #         print("LOCAL MINIMA FOUND")
-        #         return puzzle , i ,False
 
-
-        pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n,savedInstances,currentQueen) 
+        pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n,savedInstances) # O(2n)
         if (minRow != currentQueen.row): 
             puzzle.queens[currentQueen.col].row = minRow
             puzzle.queens[currentQueen.col].pairsCount = pairMin
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
-                    savedInstances.append((currentQueen.col,currentQueen.row))
-        else :
+                savedInstances[(currentQueen.col,currentQueen.row)] = True
+        else:
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
-                    savedInstances.append((currentQueen.col,currentQueen.row))
+                savedInstances[(currentQueen.col,currentQueen.row)] = True
 
+        puzzle.pairsCount = countPairs(puzzle,n) # O(4n)
         lastCount = thisCount 
         thisCount = puzzle.pairsCount
-        #print("----------------------------------")
-        #printBoard(puzzle)
-        #print()
-        #print(puzzle)
-        #print("----------------------------------")
-        if (puzzle.pairsCount == 0 ): 
+        #append count to conflict(s) array
+        conflicts.append(len(puzzle.conflictQueens))
+        conflictspair.append(puzzle.pairsCount)
+        if puzzle.pairsCount == 0: 
             return puzzle, i, True
-    return puzzle , i ,False
+    return puzzle, i, False
 
-#TODO
-#this is the function that will be called by localSearch() to decide which step to take next
-#any ties broken by breakTies()
-def findMinimum(row, col, puzzle, n,savedInstances,currentQueen  ):
+def findMinimum(cRow, cCol, puzzle, n, savedInstances):
+    '''
+    Finds the next move to do for a given queen that will minimize the conflicts O(2n)
+    ---------------------------
+    Params:
+        row: The row of the current queen
+        col: The column of the current queen
+        puzzle: A puzzle for the current state
+        n: the size of the board
+        savedInstance: A small buffer of previous moves used for dealing with plateaus
+    returns:
+        The new count for the conflicts
+        The row to move the queen too
+    '''
+
+    total = np.zeros(n)
     queens = puzzle.queens
-    pairMin= n + 1 
-    MinRow = row
-    MinRowArray = [] 
-    MinConQueens = []
-    for i in range(n): #put queen in n rows
-        pairCount = 0 
-        tempArray = []
-        for j in range(n): #check other columns for value in same row
-            if (j != col and queens[j].row == i ) or (j != col and abs(queens[j].row - i ) == abs(j - col )): 
-                pairCount +=1 
-                tempArray.append(queens[j])
 
-        if (pairMin > pairCount):
-            pairMin = pairCount
-            MinRow = i
-            MinRowArray= []
-            MinConQueens = []
-            MinRowArray.append(i)
-            MinConQueens.append(tempArray)
+    for i in range(n): # O(n)
 
+        row = queens[i].row
+        if i != cCol:
+            total[row] += 1
 
-        elif(pairMin == pairCount and i != row):
-            MinRow = i  
-            MinRowArray.append(i)
-            MinConQueens.append(tempArray)
+        if cCol <= row + i <= cCol + (n - 1):
+            total[row + i - cCol] += 1
+        if cCol + 1 <= n - row + i <= n + cCol:
+            total[abs((n - row + i) - (n + cCol))] += 1
 
-        if (pairMin == 0 ): 
-            MinConQueens = []
-            updatePairity(currentQueen,MinConQueens, puzzle)
-            currentQueen.pairs = MinConQueens
-            return pairMin, MinRow
+    mins = np.where(total == total.min())[0] # O(n)
 
-    i = 0 
-    for index in MinRowArray: 
-        temp = (col , index)
-        if temp not in savedInstances: 
-            updatePairity(currentQueen,MinConQueens[i], puzzle)
-            currentQueen.pairs = MinConQueens[i]
-            return pairMin, index
-        i +=1  
-    else : 
-        updatePairity(currentQueen, MinConQueens[-1], puzzle)
-        currentQueen.pairs = MinConQueens[-1]
-        return pairMin, MinRow
+    i = np.random.randint(0, mins.shape[0])
+    r = mins[i]
 
-#TODO 
-# This is the name of the search algo that stops the 'plateau' effect. when all moves on the board have the same minimum but none are solutions 
-def updatePairity(currentQueen, newConflictingQueens, puzzle):
-    #print("current = {}", currentQueen)
-    #print(currentQueen.pairs    )
-    #print("--Removed--")
-    for val in currentQueen.pairs: 
-        val.pairs.remove(currentQueen)
-        val.pairsCount -=1
-        puzzle.pairsCount -=1 
-        if val.pairsCount == 0 : 
-            puzzle.conflictQueens.remove(val)
+    while len(mins) > 1 and (cCol, r) in savedInstances:
+        mins = np.delete(mins, i)
+        i = randint(0, len(mins) - 1)
+        r = mins[i]
+    
+    if len(mins) == 1:
+        return total[mins[0]], mins[0]
+    else:
+        return total[mins[i]], mins[i]
 
-        #print(val)
-        #print(val.pairs)
-    #print("newConflictingQueens = {}", newConflictingQueens)
-    #print("--Added--")
-    if (len(newConflictingQueens) > 0):
-        for val in newConflictingQueens: 
-            val.pairs.append(currentQueen)
-            val.pairsCount +=1 
-            puzzle.pairsCount +=1 
-            if val.pairsCount == 1: 
-                puzzle.conflictQueens.append(val)
-             
-
-
-#TODO
-#heuristically break ties found by findMinimum()
-def breakTies():
-    print()
 
 def printBoard(puzzle):
+    '''
+    Prints the board with index 0, 0 at the botton left corner
+    ---------------------------
+    Params:
+        puzzle: A puzzle for the current state
+    prints:
+        prints the board
+    '''
     arr = puzzle.queens
     for i in range(n-1 , -1 ,-1 ):#rows 
         for j in range(n):#column
-            if (arr[j].row == i ): 
+            if arr[j].row == i: 
                 print("Q|",end = "")
             else : 
                 print(".|",end="")
         print()
-        #print("-"*n*2)
     print("Pairs = {}".format(puzzle.pairsCount))
-
+#was not sure if you wanted the count of the pairs of the conlfited queens or just the total numnber of confliced queens
+conflicts=[]
+conflictspair=[]
 if __name__ == "__main__": 
-    n = 1000
-    array = [8,4,7,0,2,9,6,9,3,2]
-    newPuzzle = puzzle(n  )
-    #print(newPuzzle)
-    #printBoard(newPuzzle)
-    solution, i,solved  = localSearch(newPuzzle,4500,n)
-    if solved: 
-        print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
-        if n < 17:
-            printBoard(solution)
-        else : 
-            print(solution)
-    else: 
-        print("=====================NO SOLUTION FOUND AFTER {} STEPS=====================".format(i))
-        if n < 17:
-            printBoard(solution)
-        else : 
-            print(solution)
+
+    parser = argparse.ArgumentParser(description="Solve n-queens")
+
+    parser.add_argument("--n", default=-1, type=int, help="The size of the board (nxn) with n queens (default: 8)")
+    parser.add_argument("--file", default=None, help="Read initial state of the board from a file")
+    parser.add_argument("--maxsteps", default=4000, type=int, help="The maximum amout of steps to try before giving up")
+    parser.add_argument('args', nargs='*', help="if an integer is put here it will be used as n if n is not provided")
+
+    args = parser.parse_args()
+
+    if args.n != -1:
+        n = args.n
+    elif len(args.args) > 0:
+        n = int(args.args[0])
+    else:
+        n = 8
+
+    if args.file is not None:
+        initialPos = []
+        with open(args.file, 'r') as f:
+            for line in f:
+                initialPos.append(int(line))
+        newPuzzle = puzzle(n, initialPos)
+    else:
+        print("Generating board")
+        t = time.time()
+        newPuzzle = puzzle(n)
+        print("Board Generated in {:.5f}s".format(time.time() - t))
+
+    if n < 17:
+        printBoard(newPuzzle)
+    else:
+        print("Initial Pairs = {}".format(newPuzzle.pairsCount))
+
+    if newPuzzle.pairsCount != 0:
+
+        t = time.time()
+        solution, i, solved = localSearch(newPuzzle, args.maxsteps, n)
+        print("Time: {:.5f}s".format(time.time() - t))
+        if solved: 
+            print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
+            if n < 17:
+                printBoard(solution)
+            else:
+                print("Initial Pairs = {}".format(newPuzzle.pairsCount))
+            # else : 
+                # print(solution)
+        else: 
+            print("=====================NO SOLUTION FOUND AFTER {} STEPS=====================".format(i))
+            if n < 17:
+                printBoard(solution)
+            else:
+                print("Initial Pairs = {}".format(newPuzzle.pairsCount))
+            # else : 
+                # print(solution)
+    #ploting the conflict count
+    plt.plot(conflicts)
+    plt.xlim(left=0)        
+    plt.ylim(bottom=0)
+    plt.ylabel('Number of confliced queens')
+    plt.xlabel('Step count')
+    plt.savefig('n-queens-conflict-count-plot.png')
+    plt.close()
+    #ploting the conflict pair count
+    plt.plot(conflictspair)
+    plt.xlim(left=0)        
+    plt.ylim(bottom=0)
+    plt.ylabel('Number of confliced queen pairs')
+    plt.xlabel('Step count')
+    plt.savefig('n-queens-conflict-pair-count-plot.png')
+    plt.close()
