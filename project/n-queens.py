@@ -159,9 +159,16 @@ def localSearch(puzzle, maxSteps, n):
     blacklistedQueens = []
     lastCount = 0 
     thisCount = 1
+    for i in range(maxSteps): # O(k)
+        if i %100 == 0: 
+            print("Amount of Steps: {:5}".format(i), end='\r')
+
+        if lastCount == thisCount:
+            for queen in puzzle.conflictQueens: 
                 if (queen.col, queen.row) not in savedInstances: 
                     savedInstances[(queen.col,queen.row)] = True
         else : 
+            savedInstances = dict({})
 
         m = len(puzzle.conflictQueens)    
 
