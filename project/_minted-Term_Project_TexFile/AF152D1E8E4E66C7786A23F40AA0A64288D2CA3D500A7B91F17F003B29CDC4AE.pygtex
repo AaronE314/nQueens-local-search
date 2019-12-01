@@ -1,0 +1,239 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+          \PYG{n}{count} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{p}{(}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{))} \PYG{o}{//} \PYG{l+m+mi}{2}
+          \PYG{n}{count} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{y} \PYG{o}{*} \PYG{p}{(}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{))} \PYG{o}{//} \PYG{l+m+mi}{2}
+          \PYG{n}{count} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{z} \PYG{o}{*} \PYG{p}{(}\PYG{n}{z} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{))} \PYG{o}{//} \PYG{l+m+mi}{2}
+
+      \PYG{c+c1}{\PYGZsh{}Count the number of queen conflicts in the puzzle object and add it ot the puzzle\PYGZsq{}s array conflictQueens}
+      \PYG{k}{for} \PYG{n}{q} \PYG{o+ow}{in} \PYG{n}{queens}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} O(n)}
+          \PYG{k}{if} \PYG{n}{q}\PYG{o}{.}\PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{cRow} \PYG{o+ow}{or} \PYG{n}{q}\PYG{o}{.}\PYG{n}{row} \PYG{o}{+} \PYG{n}{q}\PYG{o}{.}\PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{cmD} \PYG{o+ow}{or} \PYG{n}{n} \PYG{o}{\PYGZhy{}} \PYG{n}{q}\PYG{o}{.}\PYG{n}{row} \PYG{o}{+} \PYG{n}{q}\PYG{o}{.}\PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{csD}\PYG{p}{:}
+              \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{q}\PYG{p}{)}
+
+      \PYG{k}{return} \PYG{n}{count}
+
+  \PYG{k}{def} \PYG{n+nf}{localSearch}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{maxSteps}\PYG{p}{,} \PYG{n}{n}\PYG{p}{):}
+      \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{      Performs min conflics local search of the puzzle O(6n)}
+\PYG{l+s+sd}{      \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{      Params:}
+\PYG{l+s+sd}{          puzzle: A puzzle for the current state}
+\PYG{l+s+sd}{          maxSteps: The maximum number of steps to try before aborting}
+\PYG{l+s+sd}{          n: the size of the board}
+\PYG{l+s+sd}{      returns:}
+\PYG{l+s+sd}{          The finished puzzle}
+\PYG{l+s+sd}{          The number of steps}
+\PYG{l+s+sd}{          If it was solved}
+\PYG{l+s+sd}{      \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+      \PYG{k}{global} \PYG{n}{conflicts}
+      \PYG{k}{global} \PYG{n}{conflictspair}
+      \PYG{n}{savedInstances} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(\PYGZob{}\PYGZcb{})}
+      \PYG{n}{blacklistedQueens} \PYG{o}{=} \PYG{p}{[]}
+      \PYG{n}{lastCount} \PYG{o}{=} \PYG{l+m+mi}{0}
+      \PYG{n}{thisCount} \PYG{o}{=} \PYG{l+m+mi}{1}
+      \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{maxSteps}\PYG{p}{):} \PYG{c+c1}{\PYGZsh{} O(k)}
+          \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{100} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+              \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Amount of Steps: \PYGZob{}:5\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}r}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+
+          \PYG{c+c1}{\PYGZsh{}If a local minimum is hit, mark all queens that have colissions for moving/adjusting.}
+          \PYG{k}{if} \PYG{n}{lastCount} \PYG{o}{==} \PYG{n}{thisCount}\PYG{p}{:}
+              \PYG{k}{for} \PYG{n}{queen} \PYG{o+ow}{in} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{p}{:}
+                  \PYG{k}{if} \PYG{p}{(}\PYG{n}{queen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,} \PYG{n}{queen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{)} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{savedInstances}\PYG{p}{:}
+                      \PYG{n}{savedInstances}\PYG{p}{[(}\PYG{n}{queen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,}\PYG{n}{queen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{)]} \PYG{o}{=} \PYG{n+nb+bp}{True}
+          \PYG{k}{else} \PYG{p}{:}
+              \PYG{n}{savedInstances} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(\PYGZob{}\PYGZcb{})}
+
+          \PYG{n}{m} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{p}{)}
+
+          \PYG{n}{index} \PYG{o}{=} \PYG{n}{randint}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{m} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+          \PYG{n}{currentQueen} \PYG{o}{=} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{p}{[}\PYG{n}{index}\PYG{p}{]}
+
+          \PYG{c+c1}{\PYGZsh{}Get new location to move the queen to}
+          \PYG{n}{pairMin}\PYG{p}{,} \PYG{n}{minRow} \PYG{o}{=} \PYG{n}{findMinimum}\PYG{p}{(}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{,}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,} \PYG{n}{puzzle}\PYG{p}{,}\PYG{n}{n}\PYG{p}{,}\PYG{n}{savedInstances}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} O(2n)}
+
+          \PYG{c+c1}{\PYGZsh{}If the row to adjust is not the current row, move to the row and save the new instance}
+          \PYG{k}{if} \PYG{p}{(}\PYG{n}{minRow} \PYG{o}{!=} \PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{):}
+              \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{queens}\PYG{p}{[}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{]}\PYG{o}{.}\PYG{n}{row} \PYG{o}{=} \PYG{n}{minRow}
+              \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{queens}\PYG{p}{[}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{]}\PYG{o}{.}\PYG{n}{pairsCount} \PYG{o}{=} \PYG{n}{pairMin}
+              \PYG{k}{if} \PYG{p}{(}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,} \PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{)} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{savedInstances}\PYG{p}{:}
+                  \PYG{n}{savedInstances}\PYG{p}{[(}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{)]} \PYG{o}{=} \PYG{n+nb+bp}{True}
+          \PYG{c+c1}{\PYGZsh{}Otherwise, just save the instance}
+
+          \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{pairsCount} \PYG{o}{=} \PYG{n}{countPairs}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,}\PYG{n}{n}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} O(4n)}
+          \PYG{n}{lastCount} \PYG{o}{=} \PYG{n}{thisCount}
+          \PYG{n}{thisCount} \PYG{o}{=} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{pairsCount}
+          \PYG{c+c1}{\PYGZsh{}append count to conflict(s) array}
+          \PYG{n}{conflicts}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{p}{))}
+          \PYG{n}{conflictspair}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{pairsCount}\PYG{p}{)}
+          \PYG{k}{if} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{pairsCount} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+              \PYG{k}{print}\PYG{p}{()}
+              \PYG{k}{return} \PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{i}\PYG{p}{,} \PYG{n+nb+bp}{True}
+      \PYG{k}{print}\PYG{p}{()}
+      \PYG{k}{return} \PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{i}\PYG{p}{,} \PYG{n+nb+bp}{False}
+
+  \PYG{k}{def} \PYG{n+nf}{findMinimum}\PYG{p}{(}\PYG{n}{cRow}\PYG{p}{,} \PYG{n}{cCol}\PYG{p}{,} \PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{n}\PYG{p}{,} \PYG{n}{savedInstances}\PYG{p}{):}
+      \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{      Finds the next move to do for a given queen that will minimize the conflicts O(2n)}
+\PYG{l+s+sd}{      \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{      Params:}
+\PYG{l+s+sd}{          row: The row of the current queen}
+\PYG{l+s+sd}{          col: The column of the current queen}
+\PYG{l+s+sd}{          puzzle: A puzzle for the current state}
+\PYG{l+s+sd}{          n: the size of the board}
+\PYG{l+s+sd}{          savedInstance: A small buffer of previous moves used for dealing with plateaus}
+\PYG{l+s+sd}{      returns:}
+\PYG{l+s+sd}{          The new count for the conflicts}
+\PYG{l+s+sd}{          The row to move the queen too}
+\PYG{l+s+sd}{      \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+      \PYG{n}{total} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+      \PYG{n}{queens} \PYG{o}{=} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{queens}
+
+      \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):} \PYG{c+c1}{\PYGZsh{} O(n)}
+
+          \PYG{c+c1}{\PYGZsh{}count the collisions in each row except for the current row}
+          \PYG{n}{row} \PYG{o}{=} \PYG{n}{queens}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{.}\PYG{n}{row}
+          \PYG{k}{if} \PYG{n}{i} \PYG{o}{!=} \PYG{n}{cCol}\PYG{p}{:}
+              \PYG{n}{total}\PYG{p}{[}\PYG{n}{row}\PYG{p}{]} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+          \PYG{c+c1}{\PYGZsh{}Count collisions in the diagonals that pass through the current column}
+          \PYG{k}{if} \PYG{n}{cCol} \PYG{o}{\PYGZlt{}=} \PYG{n}{row} \PYG{o}{+} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{n}{cCol} \PYG{o}{+} \PYG{p}{(}\PYG{n}{n} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{):}
+              \PYG{n}{total}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{n}{i} \PYG{o}{\PYGZhy{}} \PYG{n}{cCol}\PYG{p}{]} \PYG{o}{+=} \PYG{l+m+mi}{1}
+          \PYG{k}{if} \PYG{n}{cCol} \PYG{o}{+} \PYG{l+m+mi}{1} \PYG{o}{\PYGZlt{}=} \PYG{n}{n} \PYG{o}{\PYGZhy{}} \PYG{n}{row} \PYG{o}{+} \PYG{n}{i} \PYG{o}{\PYGZlt{}=} \PYG{n}{n} \PYG{o}{+} \PYG{n}{cCol}\PYG{p}{:}
+              \PYG{n}{total}\PYG{p}{[}\PYG{n+nb}{abs}\PYG{p}{((}\PYG{n}{n} \PYG{o}{\PYGZhy{}} \PYG{n}{row} \PYG{o}{+} \PYG{n}{i}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{n}{n} \PYG{o}{+} \PYG{n}{cCol}\PYG{p}{))]} \PYG{o}{+=} \PYG{l+m+mi}{1}
+
+      \PYG{n}{mins} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{where}\PYG{p}{(}\PYG{n}{total} \PYG{o}{==} \PYG{n}{total}\PYG{o}{.}\PYG{n}{min}\PYG{p}{())[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} O(n)}
+
+      \PYG{n}{i} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{randint}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{mins}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+      \PYG{n}{r} \PYG{o}{=} \PYG{n}{mins}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+
+      \PYG{c+c1}{\PYGZsh{}Check that the move has not already been made}
+      \PYG{k}{while} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{mins}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1} \PYG{o+ow}{and} \PYG{p}{(}\PYG{n}{cCol}\PYG{p}{,} \PYG{n}{r}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{savedInstances}\PYG{p}{:}
+          \PYG{n}{mins} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{delete}\PYG{p}{(}\PYG{n}{mins}\PYG{p}{,} \PYG{n}{i}\PYG{p}{)}
+          \PYG{n}{i} \PYG{o}{=} \PYG{n}{randint}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{mins}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+          \PYG{n}{r} \PYG{o}{=} \PYG{n}{mins}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+
+      \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{mins}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{:}
+          \PYG{k}{return} \PYG{n}{total}\PYG{p}{[}\PYG{n}{mins}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]],} \PYG{n}{mins}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+      \PYG{k}{else}\PYG{p}{:}
+          \PYG{k}{return} \PYG{n}{total}\PYG{p}{[}\PYG{n}{mins}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]],} \PYG{n}{mins}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+
+
+  \PYG{k}{def} \PYG{n+nf}{saveBoardToImage}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{n}\PYG{p}{):}
+      \PYG{k+kn}{from} \PYG{n+nn}{PIL} \PYG{k+kn}{import} \PYG{n}{Image}
+      \PYG{k+kn}{from} \PYG{n+nn}{PIL} \PYG{k+kn}{import} \PYG{n}{ImageDraw}
+      \PYG{k+kn}{from} \PYG{n+nn}{PIL} \PYG{k+kn}{import} \PYG{n}{ImageFont}
+      \PYG{k+kn}{import} \PYG{n+nn}{os}
+
+      \PYG{c+c1}{\PYGZsh{} font = ImageFont.truetype(\PYGZsq{}Courier Prime Code.ttf\PYGZsq{}, 25)}
+      \PYG{n}{img} \PYG{o}{=} \PYG{n}{Image}\PYG{o}{.}\PYG{n}{new}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}RGB\PYGZsq{}}\PYG{p}{,} \PYG{p}{(}\PYG{l+m+mi}{6000}\PYG{p}{,} \PYG{l+m+mi}{6000}\PYG{p}{),} \PYG{p}{(}\PYG{l+m+mi}{255}\PYG{p}{,} \PYG{l+m+mi}{255}\PYG{p}{,} \PYG{l+m+mi}{255}\PYG{p}{))}
+      \PYG{n}{d} \PYG{o}{=} \PYG{n}{ImageDraw}\PYG{o}{.}\PYG{n}{Draw}\PYG{p}{(}\PYG{n}{img}\PYG{p}{)}
+
+      \PYG{n}{arr} \PYG{o}{=} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{queens}
+      \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{):}\PYG{c+c1}{\PYGZsh{}rows}
+          \PYG{n}{board} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}
+          \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}\PYG{c+c1}{\PYGZsh{}column}
+              \PYG{k}{if} \PYG{n}{arr}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}\PYG{o}{.}\PYG{n}{row} \PYG{o}{==} \PYG{n}{i}\PYG{p}{:}
+                  \PYG{n}{board} \PYG{o}{+=} \PYG{l+s+s2}{\PYGZdq{}Q\PYGZdq{}}
+              \PYG{k}{else}\PYG{p}{:}
+                  \PYG{n}{board} \PYG{o}{+=} \PYG{l+s+s2}{\PYGZdq{}.\PYGZdq{}}
+          \PYG{n}{d}\PYG{o}{.}\PYG{n}{text}\PYG{p}{((}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{p}{(}\PYG{n}{n} \PYG{o}{\PYGZhy{}} \PYG{n}{i} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{7}\PYG{p}{),} \PYG{n}{board}\PYG{p}{,} \PYG{n}{fill}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{))}\PYG{c+c1}{\PYGZsh{}, font=font)}
+          \PYG{c+c1}{\PYGZsh{} board += \PYGZdq{}\PYGZbs{}n\PYGZdq{}}
+
+      \PYG{n}{img}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}large.png\PYGZdq{}}\PYG{p}{)}
+
+  \PYG{k}{def} \PYG{n+nf}{printBoard}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{):}
+      \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{      Prints the board with index 0, 0 at the botton left corner}
+\PYG{l+s+sd}{      \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{      Params:}
+\PYG{l+s+sd}{          puzzle: A puzzle for the current state}
+\PYG{l+s+sd}{      prints:}
+\PYG{l+s+sd}{          prints the board}
+\PYG{l+s+sd}{      \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+      \PYG{n}{arr} \PYG{o}{=} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{queens}
+      \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{):}\PYG{c+c1}{\PYGZsh{}rows}
+          \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n}\PYG{p}{):}\PYG{c+c1}{\PYGZsh{}column}
+              \PYG{k}{if} \PYG{n}{arr}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}\PYG{o}{.}\PYG{n}{row} \PYG{o}{==} \PYG{n}{i}\PYG{p}{:}
+                  \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Q|\PYGZdq{}}\PYG{p}{,}\PYG{n}{end} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+              \PYG{k}{else} \PYG{p}{:}
+                  \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}.|\PYGZdq{}}\PYG{p}{,}\PYG{n}{end}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+          \PYG{k}{print}\PYG{p}{()}
+      \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Pairs = \PYGZob{}\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{pairsCount}\PYG{p}{))}
+
+  \PYG{n}{conflicts}\PYG{o}{=}\PYG{p}{[]}
+  \PYG{n}{conflictspair}\PYG{o}{=}\PYG{p}{[]}
+  \PYG{k}{if} \PYG{n+nv+vm}{\PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{}} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}\PYGZdq{}}\PYG{p}{:}
+
+      \PYG{n}{parser} \PYG{o}{=} \PYG{n}{argparse}\PYG{o}{.}\PYG{n}{ArgumentParser}\PYG{p}{(}\PYG{n}{description}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Solve n\PYGZhy{}queens\PYGZdq{}}\PYG{p}{)}
+
+      \PYG{n}{parser}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}n\PYGZdq{}}\PYG{p}{,} \PYG{n}{default}\PYG{o}{=\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}The size of the board (nxn) with n queens (default: 8)\PYGZdq{}}\PYG{p}{)}
+      \PYG{n}{parser}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}file\PYGZdq{}}\PYG{p}{,} \PYG{n}{default}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Read initial state of the board from a file\PYGZdq{}}\PYG{p}{)}
+      \PYG{n}{parser}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}maxsteps\PYGZdq{}}\PYG{p}{,} \PYG{n}{default}\PYG{o}{=}\PYG{l+m+mi}{4000}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}The maximum amout of steps to try before giving up\PYGZdq{}}\PYG{p}{)}
+      \PYG{n}{parser}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}args\PYGZsq{}}\PYG{p}{,} \PYG{n}{nargs}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}*\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}if an integer is put here it will be used as n if n is not provided\PYGZdq{}}\PYG{p}{)}
+
+      \PYG{n}{args} \PYG{o}{=} \PYG{n}{parser}\PYG{o}{.}\PYG{n}{parse\PYGZus{}args}\PYG{p}{()}
+
+      \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{n} \PYG{o}{!=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{:}
+          \PYG{n}{n} \PYG{o}{=} \PYG{n}{args}\PYG{o}{.}\PYG{n}{n}
+      \PYG{k}{elif} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{args}\PYG{p}{)} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:}
+          \PYG{n}{n} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{args}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])}
+      \PYG{k}{else}\PYG{p}{:}
+          \PYG{n}{n} \PYG{o}{=} \PYG{l+m+mi}{8}
+
+      \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{file} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+          \PYG{n}{initialPos} \PYG{o}{=} \PYG{p}{[]}
+          \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{file}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}r\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+              \PYG{k}{for} \PYG{n}{line} \PYG{o+ow}{in} \PYG{n}{f}\PYG{p}{:}
+                  \PYG{n}{initialPos}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{line}\PYG{p}{))}
+          \PYG{n}{n} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{initialPos}\PYG{p}{)}
+          \PYG{n}{newPuzzle} \PYG{o}{=} \PYG{n}{puzzle}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,} \PYG{n}{initialPos}\PYG{p}{)}
+      \PYG{k}{else}\PYG{p}{:}
+          \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Generating board\PYGZdq{}}\PYG{p}{)}
+          \PYG{n}{t} \PYG{o}{=} \PYG{n}{time}\PYG{o}{.}\PYG{n}{time}\PYG{p}{()}
+          \PYG{n}{newPuzzle} \PYG{o}{=} \PYG{n}{puzzle}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}
+          \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Board Generated in \PYGZob{}:.5f\PYGZcb{}s\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{time}\PYG{o}{.}\PYG{n}{time}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{t}\PYG{p}{))}
+
+      \PYG{k}{if} \PYG{n}{n} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{17}\PYG{p}{:}
+          \PYG{n}{printBoard}\PYG{p}{(}\PYG{n}{newPuzzle}\PYG{p}{)}
+      \PYG{k}{else}\PYG{p}{:}
+          \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Initial Pairs = \PYGZob{}\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{newPuzzle}\PYG{o}{.}\PYG{n}{pairsCount}\PYG{p}{))}
+
+      \PYG{k}{if} \PYG{n}{newPuzzle}\PYG{o}{.}\PYG{n}{pairsCount} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{:}
+
+          \PYG{n}{t} \PYG{o}{=} \PYG{n}{time}\PYG{o}{.}\PYG{n}{time}\PYG{p}{()}
+          \PYG{n}{solution}\PYG{p}{,} \PYG{n}{i}\PYG{p}{,} \PYG{n}{solved} \PYG{o}{=} \PYG{n}{localSearch}\PYG{p}{(}\PYG{n}{newPuzzle}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{maxsteps}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)}
+          \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Time: \PYGZob{}:.5f\PYGZcb{}s\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{time}\PYG{o}{.}\PYG{n}{time}\PYG{p}{()} \PYG{o}{\PYGZhy{}} \PYG{n}{t}\PYG{p}{))}
+          \PYG{k}{if} \PYG{n}{solved}\PYG{p}{:}
+              \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}=====================SOLUTION FOUND IN \PYGZob{}\PYGZcb{} STEPS=====================\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{))}
+              \PYG{k}{if} \PYG{n}{n} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{17}\PYG{p}{:}
+                  \PYG{n}{printBoard}\PYG{p}{(}\PYG{n}{solution}\PYG{p}{)}
+              \PYG{k}{else}\PYG{p}{:}
+                  \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Pairs = \PYGZob{}\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{newPuzzle}\PYG{o}{.}\PYG{n}{pairsCount}\PYG{p}{))}
+
+              \PYG{k}{if} \PYG{n}{n} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1000}\PYG{p}{:}
+                  \PYG{n}{saveBoardToImage}\PYG{p}{(}\PYG{n}{solution}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)}
+              \PYG{c+c1}{\PYGZsh{} else :}
+                  \PYG{c+c1}{\PYGZsh{} print(solution)}
+          \PYG{k}{else}\PYG{p}{:}
+              \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}=====================NO SOLUTION FOUND AFTER \PYGZob{}\PYGZcb{} STEPS=====================\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{))}
+              \PYG{k}{if} \PYG{n}{n} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{17}\PYG{p}{:}
+                  \PYG{n}{printBoard}\PYG{p}{(}\PYG{n}{solution}\PYG{p}{)}
+              \PYG{k}{else}\PYG{p}{:}
+                  \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Pairs = \PYGZob{}\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{newPuzzle}\PYG{o}{.}\PYG{n}{pairsCount}\PYG{p}{))}
+
+      \PYG{c+c1}{\PYGZsh{}ploting the conflict count}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{conflicts}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlim}\PYG{p}{(}\PYG{n}{left}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylim}\PYG{p}{(}\PYG{n}{bottom}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Number of confliced queens\PYGZsq{}}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Step count\PYGZsq{}}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}n\PYGZhy{}queens\PYGZhy{}conflict\PYGZhy{}count\PYGZhy{}plot.png\PYGZsq{}}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{close}\PYG{p}{()}
+      \PYG{c+c1}{\PYGZsh{}ploting the conflict pair count}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{conflictspair}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlim}\PYG{p}{(}\PYG{n}{left}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylim}\PYG{p}{(}\PYG{n}{bottom}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Number of confliced queen pairs\PYGZsq{}}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Step count\PYGZsq{}}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}n\PYGZhy{}queens\PYGZhy{}conflict\PYGZhy{}pair\PYGZhy{}count\PYGZhy{}plot.png\PYGZsq{}}\PYG{p}{)}
+      \PYG{n}{plt}\PYG{o}{.}\PYG{n}{close}\PYG{p}{()}
+\end{Verbatim}

@@ -3,6 +3,9 @@ from operator import add
 import time
 import sys
 import argparse
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 import numpy as np  # pip install numpy
 import matplotlib.pyplot as plt # pip install matplotlib
@@ -30,14 +33,18 @@ class puzzle:
     def __init__(self, n, array=None): 
     
         self.queens = []
+
+        #If parameters for the positions of the queens are passed in, 
+        #add these positions to the puzzle        
         if array is not None:
             n = len(array)
             for i in range(n): 
                 self.queens.append(Queen(i, array[i]))
+
+        #If parameters for the queens positions are not passed in, create a random minimized board.
         else : 
-            # for i in range(n): 
-                # self.queens.append(Queen(i,randint(0,n - 1)))
             self.queens = createBoard(n)
+
         self.conflictQueens = []
         self.pairsCount = countPairs(self, n)
         
@@ -56,35 +63,52 @@ def createBoard(N):
     returns:
         puzzle: a 1-d list of size n containing a queen at each column
     '''
+
+    #Queen location in the row
     row = np.zeros(N, dtype=np.int16)
+
+    #Top left to bottom right diagonal array
     ld = np.zeros(N + N, dtype=np.int16)
+
+    #Top right to bootm left diagonal array
     rd = np.zeros(N + N, dtype=np.int16)
 
     r = np.random.randint(0, N)
 
+    #Add initial queens constraints to the board
     row[r] = 1
     ld[r] = 1
     rd[N - r] = 1
 
+    #Add initial queen to the board
     queens = [Queen(0, r)]
 
     for col in range(1, N): # O(N)
 
+        #Print progress check every so often
         if N >= 100000:
             if col % 1000 == 0:
                 print("Progress: {}/{}".format(col, N), end='\r') 
 
+        #Get diagonal array of collision counts
         p = ld[col: col + N]
         q = (rd[col + 1: col + N + 1])[::-1]
+        #Get array of all collision counts
         total = row + p + q # O(N)
+
+        #Get positions with the minimum number of collisions
         minT = np.where(total == total.min())[0] # O(N)
+
+        #Pick random location with minimum number of collisions
         r = np.random.randint(0, minT.shape[0])
         r = minT[r]
 
+        #Add constraints to the board
         row[r] += 1
         ld[r + col] += 1
         rd[N - r + col] += 1
 
+        #Add queen to the board
         queens.append(Queen(col, r))
     print()
     return queens
@@ -110,18 +134,24 @@ def countPairs(puzzle, n):
     cmD = dict({})
     csD = dict({})
 
+    #Count how many queens are in each row, and diagonal
     for i in range(n): # O(n)
+
         row = queens[i].row
+
         f_row[row] += 1
         if f_row[row] > 1:
             cRow[row] = True
+
         f_mdiag[row + i] += 1
         if f_mdiag[row + i] > 1:
             cmD[row + i] = True
+
         f_sdiag[n - row + i] += 1
         if f_sdiag[n - row + i] > 1:
             csD[n - row + i] = True
 
+    #Count total number of pairs
     for i in range(n + n): # O(2n)
         x, y, z = 0, 0, 0
 
@@ -134,10 +164,11 @@ def countPairs(puzzle, n):
         count += (y * (y - 1)) // 2
         count += (z * (z - 1)) // 2
 
+    #Count the number of queen conflicts in the puzzle object and add it to the puzzle's array conflictQueens
     for q in queens: # O(n)
-
         if q.row in cRow or q.row + q.col in cmD or n - q.row + q.col in csD:
             puzzle.conflictQueens.append(q)
+
     return count
 
 def localSearch(puzzle, maxSteps, n):
@@ -163,6 +194,7 @@ def localSearch(puzzle, maxSteps, n):
         if i % 100 == 0: 
             print("Amount of Steps: {:5}".format(i), end='\r')
 
+        #If a local minimum is hit, mark all queens that have colissions for moving/adjusting.
         if lastCount == thisCount:
             for queen in puzzle.conflictQueens: 
                 if (queen.col, queen.row) not in savedInstances: 
@@ -175,16 +207,17 @@ def localSearch(puzzle, maxSteps, n):
         index = randint(0, m - 1)
         currentQueen = puzzle.conflictQueens[index]
 
+        #Get new location to move the queen to
         pairMin, minRow = findMinimum(currentQueen.row,currentQueen.col, puzzle,n,savedInstances) # O(2n)
+        
+        #If the row to adjust is not the current row, move to the row and save the new instance
         if (minRow != currentQueen.row): 
             puzzle.queens[currentQueen.col].row = minRow
             puzzle.queens[currentQueen.col].pairsCount = pairMin
             if (currentQueen.col, currentQueen.row) not in savedInstances: 
                 savedInstances[(currentQueen.col,currentQueen.row)] = True
-        else:
-            if (currentQueen.col, currentQueen.row) not in savedInstances: 
-                savedInstances[(currentQueen.col,currentQueen.row)] = True
-
+        #Otherwise, just save the instance
+    
         puzzle.pairsCount = countPairs(puzzle,n) # O(4n)
         lastCount = thisCount 
         thisCount = puzzle.pairsCount
@@ -217,10 +250,12 @@ def findMinimum(cRow, cCol, puzzle, n, savedInstances):
 
     for i in range(n): # O(n)
 
+        #count the collisions in each row except for the current row
         row = queens[i].row
         if i != cCol:
             total[row] += 1
 
+        #Count collisions in the diagonals that pass through the current column
         if cCol <= row + i <= cCol + (n - 1):
             total[row + i - cCol] += 1
         if cCol + 1 <= n - row + i <= n + cCol:
@@ -231,6 +266,7 @@ def findMinimum(cRow, cCol, puzzle, n, savedInstances):
     i = np.random.randint(0, mins.shape[0])
     r = mins[i]
 
+    #Check that the move has not already been made
     while len(mins) > 1 and (cCol, r) in savedInstances:
         mins = np.delete(mins, i)
         i = randint(0, len(mins) - 1)
@@ -242,6 +278,27 @@ def findMinimum(cRow, cCol, puzzle, n, savedInstances):
         return total[mins[i]], mins[i]
 
 
+def saveBoardToImage(puzzle, n):
+
+    # font = ImageFont.truetype('Courier Prime Code.ttf', 25)
+    img = Image.new('RGB', (6500, 7400), (255, 255, 255))
+    d = ImageDraw.Draw(img)
+    
+    font = ImageFont.truetype("Courier Prime Code.ttf", 200)
+    d.text((6500 // 2 - 500, 20), "1000-Queens", fill=(0, 0, 0), font=font)
+
+    arr = puzzle.queens
+    for i in range(n-1, -1, -1):#rows 
+        board = ""
+        for j in range(n):#column
+            if arr[j].row == i:
+                board += "Q"
+            else:
+                board += "."
+        d.text((250, (n - i - 1) * 7 + 300), board, fill=(0, 0, 0))
+
+    img.save("large.png")
+
 def printBoard(puzzle):
     '''
     Prints the board with index 0, 0 at the botton left corner
@@ -252,7 +309,7 @@ def printBoard(puzzle):
         prints the board
     '''
     arr = puzzle.queens
-    for i in range(n-1 , -1 ,-1 ):#rows 
+    for i in range(n-1, -1, -1):#rows 
         for j in range(n):#column
             if arr[j].row == i: 
                 print("Q|",end = "")
@@ -310,6 +367,9 @@ if __name__ == "__main__":
                 printBoard(solution)
             else:
                 print("Pairs = {}".format(newPuzzle.pairsCount))
+
+            if n <= 1000:
+                saveBoardToImage(solution, n)
             # else : 
                 # print(solution)
         else: 
