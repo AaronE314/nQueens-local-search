@@ -161,7 +161,7 @@ def localSearch(puzzle, maxSteps, n):
     thisCount = 1
     for i in range(maxSteps): # O(k)
         if i %100 == 0: 
-            print("BenchMark:", i)
+            print("Amount of Steps: {:5}".format(i), end='\r')
 
         if lastCount == thisCount:
             for queen in puzzle.conflictQueens: 
@@ -193,7 +193,6 @@ def localSearch(puzzle, maxSteps, n):
         conflictspair.append(puzzle.pairsCount)
         if puzzle.pairsCount == 0: 
             return puzzle, i, True
-        
     return puzzle, i, False
 
 def findMinimum(cRow, cCol, puzzle, n, savedInstances):
@@ -268,6 +267,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--n", default=-1, type=int, help="The size of the board (nxn) with n queens (default: 8)")
     parser.add_argument("--file", default=None, help="Read initial state of the board from a file")
+    parser.add_argument("--maxsteps", default=4000, type=int, help="The maximum amout of steps to try before giving up")
     parser.add_argument('args', nargs='*', help="if an integer is put here it will be used as n if n is not provided")
 
     args = parser.parse_args()
@@ -299,7 +299,7 @@ if __name__ == "__main__":
     if newPuzzle.pairsCount != 0:
 
         t = time.time()
-        solution, i, solved = localSearch(newPuzzle, 10000, n)
+        solution, i, solved = localSearch(newPuzzle, args.maxsteps, n)
         print("Time: {:.5f}s".format(time.time() - t))
         if solved: 
             print("=====================SOLUTION FOUND IN {} STEPS=====================".format(i))
