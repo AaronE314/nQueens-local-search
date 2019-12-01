@@ -2,6 +2,7 @@ from random import randint
 from operator import add
 import time
 import sys
+import argparse
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -55,9 +56,9 @@ def createBoard(N):
     returns:
         puzzle: a 1-d list of size n containing a queen at each column
     '''
-    row = np.zeros(N, dtype=int)
-    ld = np.zeros(N + N, dtype=int)
-    rd = np.zeros(N + N, dtype=int)
+    row = np.zeros(N, dtype=np.int16)
+    ld = np.zeros(N + N, dtype=np.int16)
+    rd = np.zeros(N + N, dtype=np.int16)
 
     r = np.random.randint(0, N)
 
@@ -262,12 +263,33 @@ def printBoard(puzzle):
 conflicts=[]
 conflictspair=[]
 if __name__ == "__main__": 
-    n = 8 if len(sys.argv) < 2 else int(sys.argv[1])
-    array = [8,4,7,0,2,9,6,9,3,2]
-    print("Generating board")
-    t = time.time()
-    newPuzzle = puzzle(n)
-    print("Board Generated in {:.5f}s".format(time.time() - t))
+
+    parser = argparse.ArgumentParser(description="Solve n-queens")
+
+    parser.add_argument("--n", default=-1, type=int, help="The size of the board (nxn) with n queens (default: 8)")
+    parser.add_argument("--file", default=None, help="Read initial state of the board from a file")
+    parser.add_argument('args', nargs='*', help="if an integer is put here it will be used as n if n is not provided")
+
+    args = parser.parse_args()
+
+    if args.n != -1:
+        n = args.n
+    elif len(args.args) > 0:
+        n = int(args.args[0])
+    else:
+        n = 8
+
+    if args.file is not None:
+        initialPos = []
+        with open(args.file, 'r') as f:
+            for line in f:
+                initialPos.append(int(line))
+        newPuzzle = puzzle(n, initialPos)
+    else:
+        print("Generating board")
+        t = time.time()
+        newPuzzle = puzzle(n)
+        print("Board Generated in {:.5f}s".format(time.time() - t))
 
     if n < 17:
         printBoard(newPuzzle)
