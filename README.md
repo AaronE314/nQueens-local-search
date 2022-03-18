@@ -2,7 +2,7 @@
 
 ## Setup
 
-## Install
+### Install
 requires python >=3.6
 
 install requirements
@@ -10,7 +10,7 @@ install requirements
 pip install -r requirements.txt
 ```
 
-## Run
+### Run
 
 To just run with 8 queens run with
 ```bash
@@ -75,7 +75,7 @@ Time: 230.99690s
 Pairs = 0
 ```
 
-## Graphs for number of queens
+### Graphs for number of queens
 
 The graph for the number of conflicting queens per move:
 ![conflictingQueens](./docs/n-queens-conflict-count-plot-1000000.png)
@@ -84,7 +84,7 @@ The graph for the number of pairs of conflicting queens per move:
 
 ![conflictingQueenPairs](./docs/n-queens-conflict-pair-count-plot-1000000.png)
 
-## Run Times
+### Run Times
 
 Raw run times
 
