@@ -1,0 +1,51 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+          \PYG{n}{count} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{x} \PYG{o}{*} \PYG{p}{(}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{))} \PYG{o}{//} \PYG{l+m+mi}{2}
+          \PYG{n}{count} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{y} \PYG{o}{*} \PYG{p}{(}\PYG{n}{y} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{))} \PYG{o}{//} \PYG{l+m+mi}{2}
+          \PYG{n}{count} \PYG{o}{+=} \PYG{p}{(}\PYG{n}{z} \PYG{o}{*} \PYG{p}{(}\PYG{n}{z} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{))} \PYG{o}{//} \PYG{l+m+mi}{2}
+
+      \PYG{c+c1}{\PYGZsh{}Count the number of queen conflicts in the puzzle object and add it ot the puzzle\PYGZsq{}s array conflictQueens}
+      \PYG{k}{for} \PYG{n}{q} \PYG{o+ow}{in} \PYG{n}{queens}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} O(n)}
+          \PYG{k}{if} \PYG{n}{q}\PYG{o}{.}\PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{cRow} \PYG{o+ow}{or} \PYG{n}{q}\PYG{o}{.}\PYG{n}{row} \PYG{o}{+} \PYG{n}{q}\PYG{o}{.}\PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{cmD} \PYG{o+ow}{or} \PYG{n}{n} \PYG{o}{\PYGZhy{}} \PYG{n}{q}\PYG{o}{.}\PYG{n}{row} \PYG{o}{+} \PYG{n}{q}\PYG{o}{.}\PYG{n}{col} \PYG{o+ow}{in} \PYG{n}{csD}\PYG{p}{:}
+              \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{q}\PYG{p}{)}
+
+      \PYG{k}{return} \PYG{n}{count}
+
+  \PYG{k}{def} \PYG{n+nf}{localSearch}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{maxSteps}\PYG{p}{,} \PYG{n}{n}\PYG{p}{):}
+      \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{      Performs min conflics local search of the puzzle O(6n)}
+\PYG{l+s+sd}{      \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{      Params:}
+\PYG{l+s+sd}{          puzzle: A puzzle for the current state}
+\PYG{l+s+sd}{          maxSteps: The maximum number of steps to try before aborting}
+\PYG{l+s+sd}{          n: the size of the board}
+\PYG{l+s+sd}{      returns:}
+\PYG{l+s+sd}{          The finished puzzle}
+\PYG{l+s+sd}{          The number of steps}
+\PYG{l+s+sd}{          If it was solved}
+\PYG{l+s+sd}{      \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+      \PYG{k}{global} \PYG{n}{conflicts}
+      \PYG{k}{global} \PYG{n}{conflictspair}
+      \PYG{n}{savedInstances} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(\PYGZob{}\PYGZcb{})}
+      \PYG{n}{blacklistedQueens} \PYG{o}{=} \PYG{p}{[]}
+      \PYG{n}{lastCount} \PYG{o}{=} \PYG{l+m+mi}{0}
+      \PYG{n}{thisCount} \PYG{o}{=} \PYG{l+m+mi}{1}
+      \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{maxSteps}\PYG{p}{):} \PYG{c+c1}{\PYGZsh{} O(k)}
+          \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{100} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+              \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Amount of Steps: \PYGZob{}:5\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{),} \PYG{n}{end}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}r}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+
+          \PYG{c+c1}{\PYGZsh{}If a local minimum is hit, mark all queens that have colissions for moving/adjusting.}
+          \PYG{k}{if} \PYG{n}{lastCount} \PYG{o}{==} \PYG{n}{thisCount}\PYG{p}{:}
+              \PYG{k}{for} \PYG{n}{queen} \PYG{o+ow}{in} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{p}{:}
+                  \PYG{k}{if} \PYG{p}{(}\PYG{n}{queen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,} \PYG{n}{queen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{)} \PYG{o+ow}{not} \PYG{o+ow}{in} \PYG{n}{savedInstances}\PYG{p}{:}
+                      \PYG{n}{savedInstances}\PYG{p}{[(}\PYG{n}{queen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,}\PYG{n}{queen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{)]} \PYG{o}{=} \PYG{n+nb+bp}{True}
+          \PYG{k}{else} \PYG{p}{:}
+              \PYG{n}{savedInstances} \PYG{o}{=} \PYG{n+nb}{dict}\PYG{p}{(\PYGZob{}\PYGZcb{})}
+
+          \PYG{n}{m} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{p}{)}
+
+          \PYG{n}{index} \PYG{o}{=} \PYG{n}{randint}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{m} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+          \PYG{n}{currentQueen} \PYG{o}{=} \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{conflictQueens}\PYG{p}{[}\PYG{n}{index}\PYG{p}{]}
+
+          \PYG{c+c1}{\PYGZsh{}Get new location to move the queen to O(2n)}
+          \PYG{n}{pairMin}\PYG{p}{,} \PYG{n}{minRow} \PYG{o}{=} \PYG{n}{findMinimum}\PYG{p}{(}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{row}\PYG{p}{,}\PYG{n}{currentQueen}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,} \PYG{n}{puzzle}\PYG{p}{,}\PYG{n}{n}\PYG{p}{,}\PYG{n}{savedInstances}\PYG{p}{)}
+\end{Verbatim}

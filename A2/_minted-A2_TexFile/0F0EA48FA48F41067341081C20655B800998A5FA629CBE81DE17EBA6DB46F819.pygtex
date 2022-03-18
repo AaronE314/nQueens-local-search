@@ -1,0 +1,104 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from} \PYG{n+nn}{queue} \PYG{k+kn}{import} \PYG{n}{Queue}
+\PYG{k+kn}{from} \PYG{n+nn}{copy} \PYG{k+kn}{import} \PYG{n}{deepcopy}
+\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{import} \PYG{n+nn}{os}
+\PYG{c+c1}{\PYGZsh{}for the graph at the end}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k+kn}{as} \PYG{n+nn}{plt}
+
+\PYG{k}{class} \PYG{n+nc}{Node}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}\PYG{n}{row}\PYG{p}{,}\PYG{n}{col}\PYG{p}{,}\PYG{n}{value}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{domain}\PYG{o}{=}\PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{)):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{row} \PYG{o}{=} \PYG{n}{row}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{col} \PYG{o}{=} \PYG{n}{col}
+        \PYG{k}{if} \PYG{n}{value} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value} \PYG{o}{=} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{domain} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)]}
+        \PYG{k}{else} \PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value} \PYG{o}{=} \PYG{n}{value}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{domain} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{domain}\PYG{p}{)}
+
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}str\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}(\PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{})\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{row}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}
+
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}repr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}(\PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{}, \PYGZob{}\PYGZcb{})\PYGZsq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{row}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{col}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}
+
+\PYG{k}{class} \PYG{n+nc}{Arc}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,}\PYG{n}{Xi}\PYG{p}{,}\PYG{n}{Xj}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xi} \PYG{o}{=} \PYG{n}{Xi}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xj} \PYG{o}{=} \PYG{n}{Xj}
+
+    \PYG{k}{def} \PYG{n+nf}{evaluate}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+        \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{        Evaluates arc}
+\PYG{l+s+sd}{        \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{        returns:}
+\PYG{l+s+sd}{            noSolution: whether or not the state of the puzzle is not solvable}
+\PYG{l+s+sd}{            Checks : Xi != Xj and Xi domain not \PYGZob{}\PYGZcb{}}
+\PYG{l+s+sd}{        \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+        \PYG{n}{notSolvable} \PYG{o}{=} \PYG{n+nb+bp}{False}
+        \PYG{c+c1}{\PYGZsh{}enforcing arc consistency Xi != Xj}
+        \PYG{k}{if}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xi}\PYG{o}{.}\PYG{n}{value} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xi}\PYG{o}{.}\PYG{n}{value} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xj}\PYG{o}{.}\PYG{n}{value}\PYG{p}{):}
+            \PYG{n}{notSolvable} \PYG{o}{=} \PYG{n+nb+bp}{True}
+        \PYG{k}{elif} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xj}\PYG{o}{.}\PYG{n}{value} \PYG{o}{!=} \PYG{n+nb+bp}{None} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xj}\PYG{o}{.}\PYG{n}{value} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xi}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{):}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xi}\PYG{o}{.}\PYG{n}{domain}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{((}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xj}\PYG{o}{.}\PYG{n}{value}\PYG{p}{))}
+            \PYG{k}{if} \PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Xi}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}\PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{0} \PYG{p}{):}
+                \PYG{n}{notSolvable} \PYG{o}{=} \PYG{n+nb+bp}{True}
+        \PYG{k}{return} \PYG{n}{notSolvable}
+
+
+
+
+\PYG{k}{def} \PYG{n+nf}{addNeighbours}\PYG{p}{(}\PYG{n}{queue}\PYG{p}{,}\PYG{n}{node}\PYG{p}{,} \PYG{n}{puzzle}\PYG{p}{):}
+     \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Adds all Arcs where Xk != Xi given Xi.}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params (optional):}
+\PYG{l+s+sd}{        queue: a Queue of of arcs to evaluate using AC3}
+\PYG{l+s+sd}{        node: the node Xi you would like to add all neighbhor arcs to}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{        noSolution: a boolean of whether or not the given puzzle is solvable}
+\PYG{l+s+sd}{        noneValueFound: a boolean of whether the given puzzle was fully solved by AC3,}
+\PYG{l+s+sd}{        returns true if AC3 solved the puzzle}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{currentRow} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{row}
+    \PYG{n}{currentColumn} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{col}
+    \PYG{c+c1}{\PYGZsh{}grab neighbhors in nodes row}
+    \PYG{n}{i} \PYG{o}{=} \PYG{n}{currentRow}
+    \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{j}\PYG{p}{):}
+            \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{],} \PYG{n}{node} \PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{}grab neighbhors in nodes column}
+    \PYG{n}{j} \PYG{o}{=} \PYG{n}{currentColumn}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{j}\PYG{p}{):}
+            \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{],} \PYG{n}{node} \PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{}grab neighbhors in box}
+    \PYG{n}{row} \PYG{o}{=} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{//} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{3}
+    \PYG{n}{col} \PYG{o}{=} \PYG{p}{(}\PYG{n}{currentColumn} \PYG{o}{//} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{3}
+
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{p}{:}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{row} \PYG{o}{+}\PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{col}\PYG{o}{+} \PYG{n}{j}\PYG{p}{):}
+                \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{n}{i}\PYG{p}{][}\PYG{n}{col} \PYG{o}{+} \PYG{n}{j}\PYG{p}{],} \PYG{n}{node} \PYG{p}{))}
+
+\PYG{k}{def} \PYG{n+nf}{AC3}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Does AC3 algorithm on Sudoku Puzzle}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params (optional):}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{        noSolution: a boolean of whether or not the given puzzle is solvable}
+\PYG{l+s+sd}{        noneValueFound: a boolean of whether the given puzzle was fully solved by AC3,}
+\PYG{l+s+sd}{        returns true if AC3 solved the puzzle}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{k}{global} \PYG{n}{qlengths}
+    \PYG{n}{queue} \PYG{o}{=} \PYG{n}{Queue}\PYG{p}{()}
+\end{Verbatim}

@@ -1,0 +1,104 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}
+    \PYG{n}{j}\PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{c+c1}{\PYGZsh{}checking if puzzle is solved}
+    \PYG{n}{noneValueFound}\PYG{o}{=} \PYG{n+nb+bp}{False}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{9} \PYG{o+ow}{and} \PYG{o+ow}{not} \PYG{n}{noneValueFound}\PYG{p}{):}
+        \PYG{n}{j} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{k}{while}\PYG{p}{(}\PYG{n}{j} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{9} \PYG{o+ow}{and} \PYG{o+ow}{not} \PYG{n}{noneValueFound}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{]}\PYG{o}{.}\PYG{n}{value} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{n}{noneValueFound} \PYG{o}{=} \PYG{n+nb+bp}{True}
+            \PYG{n}{j}\PYG{o}{+=}\PYG{l+m+mi}{1}
+        \PYG{n}{i} \PYG{o}{+=}\PYG{l+m+mi}{1}
+    \PYG{k}{return} \PYG{n}{puzzle}\PYG{p}{,} \PYG{o+ow}{not} \PYG{n}{noneValueFound}\PYG{p}{,} \PYG{n}{noSolution}
+
+\PYG{k}{def} \PYG{n+nf}{loadPuzzle}\PYG{p}{(}\PYG{n+nb}{file}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}./puzzles/easy.csv\PYGZsq{}}\PYG{p}{,} \PYG{n}{num}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{header}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} \PYG{n}{start}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,}
+                \PYG{n}{givenSolutions}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Loads a puzzle from a file}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params (optional):}
+\PYG{l+s+sd}{        file: the file to load, defaults to puzzle/easy.csv}
+\PYG{l+s+sd}{        num: the number of puzzles to load, defaults to 1}
+\PYG{l+s+sd}{        header: if the file has a header or not, defaults to True}
+\PYG{l+s+sd}{        start: what line to start reading the puzzle from}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{        solution: a 2d array of Nodes representing the solution of the puzzle}
+\PYG{l+s+sd}{        Note: if num \PYGZgt{} 1 will return an array of puzzles and and array of solutions}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n+nb}{file}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}r\PYGZsq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+
+        \PYG{k}{if} \PYG{n}{num} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o+ow}{or} \PYG{n}{num} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{:}
+            \PYG{n}{puzzles} \PYG{o}{=} \PYG{p}{[]}
+            \PYG{n}{solutions} \PYG{o}{=} \PYG{p}{[]}
+
+        \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{line} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{f}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{header} \PYG{o+ow}{and} \PYG{n}{i} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+                \PYG{n}{start} \PYG{o}{+=} \PYG{l+m+mi}{1}
+                \PYG{k}{continue}
+
+            \PYG{k}{if} \PYG{n}{i} \PYG{o}{\PYGZlt{}} \PYG{n}{start}\PYG{p}{:}
+                \PYG{k}{continue}
+
+            \PYG{k}{if} \PYG{n}{num} \PYG{o}{!=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o+ow}{and} \PYG{n}{i} \PYG{o}{\PYGZgt{}} \PYG{n}{start} \PYG{o}{+} \PYG{n}{num}\PYG{p}{:}
+                \PYG{k}{break}
+
+            \PYG{k}{if} \PYG{n}{givenSolutions}\PYG{p}{:}
+                \PYG{n}{puzzleAndSol} \PYG{o}{=} \PYG{n}{line}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{},\PYGZsq{}}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n}{line} \PYG{o}{=} \PYG{n}{line}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{},\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+                \PYG{n}{puzzleAndSol} \PYG{o}{=} \PYG{p}{[}\PYG{n}{line}\PYG{p}{]}
+            \PYG{n}{puzzle} \PYG{o}{=} \PYG{p}{[]}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+                \PYG{n}{row} \PYG{o}{=} \PYG{p}{[]}
+                \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+                    \PYG{n}{row}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{Node}\PYG{p}{(}\PYG{n}{j}\PYG{p}{,} \PYG{n}{k}\PYG{p}{,}
+                    \PYG{n+nb+bp}{None} \PYG{k}{if} \PYG{n}{puzzleAndSol}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{n}{j}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{)} \PYG{o}{+} \PYG{n}{k}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}} \PYG{k}{else}
+                            \PYG{n}{puzzleAndSol}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{n}{j}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{)} \PYG{o}{+} \PYG{n}{k}\PYG{p}{]))}
+                \PYG{n}{puzzle}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{row}\PYG{p}{)}
+
+            \PYG{k}{if} \PYG{n}{givenSolutions}\PYG{p}{:}
+                \PYG{n}{solution} \PYG{o}{=} \PYG{p}{[]}
+                \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+                    \PYG{n}{row} \PYG{o}{=} \PYG{p}{[]}
+                    \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+                        \PYG{n}{row}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{Node}\PYG{p}{(}\PYG{n}{j}\PYG{p}{,} \PYG{n}{k}\PYG{p}{,}
+                        \PYG{n+nb+bp}{None} \PYG{k}{if} \PYG{n}{puzzleAndSol}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{n}{j}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{)} \PYG{o}{+} \PYG{n}{k}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}.\PYGZsq{}} \PYG{k}{else}
+                                \PYG{n}{puzzleAndSol}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{n}{j}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{)} \PYG{o}{+} \PYG{n}{k}\PYG{p}{]))}
+                    \PYG{n}{solution}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{row}\PYG{p}{)}
+
+            \PYG{k}{if} \PYG{n}{num} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o+ow}{or} \PYG{n}{num} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{:}
+                \PYG{n}{puzzles}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{)}
+                \PYG{k}{if} \PYG{n}{givenSolutions}\PYG{p}{:}
+                    \PYG{n}{solutions}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{solution}\PYG{p}{)}
+    \PYG{k}{if} \PYG{n}{num} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o+ow}{or} \PYG{n}{num} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{puzzles}\PYG{p}{,} \PYG{n}{solutions}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{solution} \PYG{k}{if} \PYG{n}{givenSolutions} \PYG{k}{else} \PYG{n+nb+bp}{None}
+
+\PYG{k}{def} \PYG{n+nf}{backtrackSearch}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Performs a backtracking search on a csp sudoku}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Param:}
+\PYG{l+s+sd}{        puzzle: A 2d array of Node objects}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        A solved sudoku puzzle}
+\PYG{l+s+sd}{        A boolean of if the puzzle is solved or not}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{} Find the starting node based on the degree heuristic}
+    \PYG{c+c1}{\PYGZsh{} ie selecting the node with largest amount of constraints}
+    \PYG{c+c1}{\PYGZsh{} since that node will have the largest degree as there will}
+    \PYG{c+c1}{\PYGZsh{} be the most unassigned variables around it.}
+    \PYG{n}{firstNode} \PYG{o}{=} \PYG{n+nb+bp}{None}
+    \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{puzzle}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{node} \PYG{o+ow}{in} \PYG{n}{row}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{node}\PYG{o}{.}\PYG{n}{value} \PYG{o+ow}{is} \PYG{n+nb+bp}{None} \PYG{o+ow}{and} \PYG{p}{(}\PYG{n}{firstNode} \PYG{o+ow}{is} \PYG{n+nb+bp}{None}
+            \PYG{o+ow}{or} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{firstNode}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)):}
+                \PYG{n}{firstNode} \PYG{o}{=} \PYG{n}{node}
+
+    \PYG{c+c1}{\PYGZsh{} Starts the backtracking}
+    \PYG{k}{return} \PYG{n}{backtrack}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{firstNode}\PYG{o}{.}\PYG{n}{row}\PYG{p}{,} \PYG{n}{firstNode}\PYG{o}{.}\PYG{n}{col}\PYG{p}{)}
+\end{Verbatim}

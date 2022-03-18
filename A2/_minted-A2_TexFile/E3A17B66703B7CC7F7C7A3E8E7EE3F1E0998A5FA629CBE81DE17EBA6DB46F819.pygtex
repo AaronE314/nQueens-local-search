@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{c+c1}{\PYGZsh{}fill queue with initial constraints}
+    \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{puzzle}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{node} \PYG{o+ow}{in} \PYG{n}{row}\PYG{p}{:}
+            \PYG{n}{currentRow} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{row}
+            \PYG{n}{currentColumn} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{col}
+            \PYG{c+c1}{\PYGZsh{}grab neighbhors in nodes row}
+            \PYG{n}{i} \PYG{o}{=} \PYG{n}{currentRow}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{j}\PYG{p}{):}
+                    \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{node}\PYG{p}{,}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{]} \PYG{p}{))}
+
+            \PYG{c+c1}{\PYGZsh{}grab neighbhors in nodes column}
+            \PYG{n}{j} \PYG{o}{=} \PYG{n}{currentColumn}
+            \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{j}\PYG{p}{):}
+                    \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(} \PYG{n}{node}\PYG{p}{,}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{]} \PYG{p}{))}
+
+            \PYG{c+c1}{\PYGZsh{}grab neighbhors in box}
+            \PYG{n}{num\PYGZus{}row} \PYG{o}{=} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{//} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{3}
+            \PYG{n}{col} \PYG{o}{=} \PYG{p}{(}\PYG{n}{currentColumn} \PYG{o}{//} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{3}
+
+            \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{p}{:}
+                \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{p}{:}
+                    \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{num\PYGZus{}row} \PYG{o}{+}\PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{col}\PYG{o}{+} \PYG{n}{j}\PYG{p}{):}
+                        \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{node}\PYG{p}{,}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{num\PYGZus{}row}\PYG{o}{+} \PYG{n}{i}\PYG{p}{][}\PYG{n}{col}\PYG{o}{+}\PYG{n}{j}\PYG{p}{]} \PYG{p}{))}
+
+    \PYG{n}{noSolution} \PYG{o}{=} \PYG{n+nb+bp}{False}
+    \PYG{n}{qlengths}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{queue}\PYG{o}{.}\PYG{n}{qsize}\PYG{p}{())}
+    \PYG{k}{while} \PYG{p}{(}\PYG{n}{queue}\PYG{o}{.}\PYG{n}{qsize}\PYG{p}{()} \PYG{o}{\PYGZgt{}}  \PYG{l+m+mi}{0}  \PYG{o+ow}{and} \PYG{o+ow}{not} \PYG{n}{noSolution}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{}Get first Node}
+        \PYG{n}{arc} \PYG{o}{=} \PYG{n}{queue}\PYG{o}{.}\PYG{n}{get\PYGZus{}nowait}\PYG{p}{()}
+        \PYG{n}{node} \PYG{o}{=} \PYG{n}{arc}\PYG{o}{.}\PYG{n}{Xi}
+
+        \PYG{c+c1}{\PYGZsh{}get needed attributes}
+        \PYG{n}{domainCount} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}
+        \PYG{n}{noSolution}\PYG{o}{=} \PYG{n}{arc}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{()}
+        \PYG{n}{newDomainCount} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} this line doesnt cause a problem due to the check within \PYGZdq{}evaluate\PYGZdq{}}
+        \PYG{c+c1}{\PYGZsh{} because of this line : if(self.Xi.value is not None and}
+        \PYG{c+c1}{\PYGZsh{} self.Xi.value == self.Xj.value):}
+        \PYG{k}{if} \PYG{n}{newDomainCount} \PYG{o}{==} \PYG{l+m+mi}{1} \PYG{p}{:}
+            \PYG{n}{node}\PYG{o}{.}\PYG{n}{value} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{c+c1}{\PYGZsh{}if domain has been changed , add all neighbors}
+        \PYG{k}{if} \PYG{n}{newDomainCount} \PYG{o}{\PYGZlt{}} \PYG{n}{domainCount}\PYG{p}{:}
+            \PYG{n}{addNeighbours}\PYG{p}{(}\PYG{n}{queue}\PYG{p}{,}\PYG{n}{node}\PYG{p}{,}\PYG{n}{puzzle}\PYG{p}{)}
+        \PYG{n}{qlengths}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{queue}\PYG{o}{.}\PYG{n}{qsize}\PYG{p}{())}
+\end{Verbatim}

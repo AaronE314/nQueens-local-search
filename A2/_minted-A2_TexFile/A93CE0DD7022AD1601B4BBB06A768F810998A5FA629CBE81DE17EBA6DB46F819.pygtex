@@ -1,0 +1,53 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{addNeighbours}\PYG{p}{(}\PYG{n}{queue}\PYG{p}{,}\PYG{n}{node}\PYG{p}{,} \PYG{n}{puzzle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Adds all Arcs where Xk != Xi given Xi.}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params (optional):}
+\PYG{l+s+sd}{        queue: a Queue of of arcs to evaluate using AC3}
+\PYG{l+s+sd}{        node: the node Xi you would like to add all neighbhor arcs to}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{        noSolution: a boolean of whether or not the given puzzle is solvable}
+\PYG{l+s+sd}{        noneValueFound: a boolean of whether the given puzzle was fully solved by AC3,}
+\PYG{l+s+sd}{        returns true if AC3 solved the puzzle}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{currentRow} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{row}
+    \PYG{n}{currentColumn} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{col}
+    \PYG{c+c1}{\PYGZsh{}grab neighbhors in nodes row}
+    \PYG{n}{i} \PYG{o}{=} \PYG{n}{currentRow}
+    \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{j}\PYG{p}{):}
+            \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{],} \PYG{n}{node} \PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{}grab neighbhors in nodes column}
+    \PYG{n}{j} \PYG{o}{=} \PYG{n}{currentColumn}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{9}\PYG{p}{):}
+        \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{j}\PYG{p}{):}
+            \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{j}\PYG{p}{],} \PYG{n}{node} \PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{}grab neighbhors in box}
+    \PYG{n}{row} \PYG{o}{=} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{//} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{3}
+    \PYG{n}{col} \PYG{o}{=} \PYG{p}{(}\PYG{n}{currentColumn} \PYG{o}{//} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{*} \PYG{l+m+mi}{3}
+
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)} \PYG{p}{:}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{p}{(}\PYG{n}{currentRow} \PYG{o}{==} \PYG{n}{row} \PYG{o}{+}\PYG{n}{i} \PYG{o+ow}{and} \PYG{n}{currentColumn} \PYG{o}{==} \PYG{n}{col}\PYG{o}{+} \PYG{n}{j}\PYG{p}{):}
+                \PYG{n}{queue}\PYG{o}{.}\PYG{n}{put}\PYG{p}{(}\PYG{n}{Arc}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{n}{i}\PYG{p}{][}\PYG{n}{col} \PYG{o}{+} \PYG{n}{j}\PYG{p}{],} \PYG{n}{node} \PYG{p}{))}
+
+\PYG{k}{def} \PYG{n+nf}{AC3}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Does AC3 algorithm on Sudoku Puzzle}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params (optional):}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        puzzle: a 2d array of Nodes representing the puzzle}
+\PYG{l+s+sd}{        noSolution: a boolean of whether or not the given puzzle is solvable}
+\PYG{l+s+sd}{        noneValueFound: a boolean of whether the given puzzle was fully solved by AC3,}
+\PYG{l+s+sd}{        returns true if AC3 solved the puzzle}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{k}{global} \PYG{n}{qlengths}
+    \PYG{n}{queue} \PYG{o}{=} \PYG{n}{Queue}\PYG{p}{()}
+\end{Verbatim}

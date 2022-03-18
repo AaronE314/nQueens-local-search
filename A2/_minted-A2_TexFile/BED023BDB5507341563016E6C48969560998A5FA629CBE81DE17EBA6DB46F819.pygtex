@@ -1,0 +1,51 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{backtrack}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Auxiliary Performs a backtracking search on a csp sudoku}
+\PYG{l+s+sd}{    \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
+\PYG{l+s+sd}{    Params:}
+\PYG{l+s+sd}{        puzzle: A 2d array of Node objects}
+\PYG{l+s+sd}{        row: The row of the current node}
+\PYG{l+s+sd}{        col: The col of the current node}
+\PYG{l+s+sd}{    returns:}
+\PYG{l+s+sd}{        A solved sudoku puzzle}
+\PYG{l+s+sd}{        A boolean for if the puzzle is solved or not}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+
+    \PYG{c+c1}{\PYGZsh{} Check if the puzzle is finished, if it is we are done}
+    \PYG{c+c1}{\PYGZsh{} and collapse the call stack}
+    \PYG{k}{if} \PYG{n}{complete}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{):}
+        \PYG{k}{return} \PYG{n}{puzzle}\PYG{p}{,} \PYG{n+nb+bp}{True}
+
+    \PYG{c+c1}{\PYGZsh{} Get the order of the domain using the}
+    \PYG{c+c1}{\PYGZsh{} least consraining value heuristic}
+    \PYG{n}{domainOrder} \PYG{o}{=} \PYG{n}{order}\PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{,} \PYG{n}{puzzle}\PYG{p}{)}
+
+    \PYG{k}{for} \PYG{n}{value} \PYG{o+ow}{in} \PYG{n}{domainOrder}\PYG{p}{:}
+
+        \PYG{c+c1}{\PYGZsh{} Check if the current value in the domain is consistant}
+        \PYG{c+c1}{\PYGZsh{} with the constraints of the sudoku}
+        \PYG{c+c1}{\PYGZsh{} Should always be consisitant}
+        \PYG{k}{if} \PYG{n}{valid}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{,} \PYG{n}{value}\PYG{p}{):}
+
+            \PYG{c+c1}{\PYGZsh{} Store a copy of the current state for}
+            \PYG{c+c1}{\PYGZsh{} the backtracking}
+            \PYG{n}{state} \PYG{o}{=} \PYG{n}{deepcopy}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} Update the value of the current node}
+            \PYG{n}{puzzle}\PYG{p}{[}\PYG{n}{row}\PYG{p}{][}\PYG{n}{col}\PYG{p}{]}\PYG{o}{.}\PYG{n}{value} \PYG{o}{=} \PYG{n}{value}
+
+            \PYG{c+c1}{\PYGZsh{} Make the updated puzzle arc consistant}
+            \PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{completed}\PYG{p}{,} \PYG{n}{noSolution} \PYG{o}{=} \PYG{n}{AC3}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} If the puzzle still has a solution}
+            \PYG{c+c1}{\PYGZsh{} We can continue, Otherwise we move on}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{noSolution}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{completed}\PYG{p}{:}
+                    \PYG{c+c1}{\PYGZsh{} Figure out which node we should check next using}
+                    \PYG{c+c1}{\PYGZsh{} MRV}
+                    \PYG{n}{nextNode} \PYG{o}{=} \PYG{n}{getNextNode}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} Call the next node}
+                    \PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{completed} \PYG{o}{=} \PYG{n}{backtrack}\PYG{p}{(}\PYG{n}{puzzle}\PYG{p}{,} \PYG{n}{nextNode}\PYG{o}{.}\PYG{n}{row}\PYG{p}{,} \PYG{n}{nextNode}\PYG{o}{.}\PYG{n}{col}\PYG{p}{)}
+\end{Verbatim}
